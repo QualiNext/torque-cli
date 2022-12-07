@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net6.0/dotcli.dll",
-            "args": ["bp", "list", "sample_blueprints", "--space=Sample", "--token=coTuruQhqMoUwXMIwIcqrfxLNCoVPV8X6P4l84aKuFE"],
+            "args": ["bp", "list", "sample_blueprints", "--space=Sample",  "--token=coTuruQhqMoUwXMIwIcqrfxLNCoVPV8X6P4l84aKuFE"],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
