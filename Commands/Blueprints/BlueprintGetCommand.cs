@@ -13,26 +13,26 @@ public sealed class BlueprintGetCommand : AsyncCommand<BlueprintGetCommand.Setti
     {
         [CommandArgument(0, "<BLUEPRINT-NAME>")]
         [Description("The blueprint name to show")]
-        public string BlueprintName { get; set; }
+        public string? BlueprintName { get; set; }
 
         [CommandArgument(1, "<REPOSITORY-NAME>")]
         [Description("The repository name to find a blueprint from")]
-        public string RepositoryName { get; set; }
+        public string? RepositoryName { get; set; }
     }
 
-    async public override Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var token = settings.Token;
         var space = settings.Space;
-        var HttpClient = new HttpClient();
+        var httpClient = new HttpClient();
 
         // HttpClient.BaseAddress = new Uri("https://portal.qtorque.io/api");
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var client = new TorqueApiClient("https://portal.qtorque.io/api/", HttpClient);
-        var BlueprintDetails = await client.CatalogGETAsync(space, settings.BlueprintName, settings.RepositoryName);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var client = new TorqueApiClient("https://portal.qtorque.io/api/", httpClient);
+        var blueprintDetails = await client.CatalogGETAsync(space, settings.BlueprintName, settings.RepositoryName);
 
         AnsiConsole.MarkupLine($"[bold]Get Blueprint =>[/] name[[{settings.BlueprintName}]]");
-        AnsiConsole.WriteLine($"Details: {BlueprintDetails.Details.ToString()}");
+        AnsiConsole.WriteLine($"Details: {blueprintDetails.Details}");
         return 0;
     }
 }

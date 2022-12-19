@@ -1,37 +1,33 @@
 using Spectre.Console.Cli;
 using Spectre.Console;
-using System.Net.Http.Headers;
-using Torque.Cli.Api;
-using System.ComponentModel;
+using Torque.Cli.Models.Settings.Blueprints;
 
-namespace Torque.Cli.Commands.Blueprints;
-
-public sealed class BlueprintListCommand : AsyncCommand<BlueprintListCommand.Settings>
+namespace Torque.Cli.Commands.Blueprints
 {
-    public sealed class Settings : Base.BaseSettings
+    internal class BlueprintListCommand : AsyncCommand<BlueprintListCommandSettings>
     {
-        [CommandArgument(1, "<REPOSITORY-NAME>")]
-        [Description("The repository name to find a blueprint from")]
-        public string RepositoryName { get; set; }
-    }
+        private readonly ClientManager _clientManager;
 
-    async public override Task<int> ExecuteAsync(CommandContext context, Settings settings)
-    {
-        var token = settings.Token;
-        var HttpClient = new HttpClient();
-
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var client = new TorqueApiClient("https://portal.qtorque.io/", HttpClient);
-        var BlueprintList = await client.BlueprintsAllAsync(settings.Space);
-        
-        AnsiConsole.MarkupLine("Blueprint List");
-
-        foreach (var bp in BlueprintList)
+        public BlueprintListCommand(ClientManager clientManager)
         {
-            string result = bp.Name;
-            AnsiConsole.WriteLine(result);
+            _clientManager = clientManager;
         }
-                
-        return 0;
+
+        public override async Task<int> ExecuteAsync(CommandContext context, BlueprintListCommandSettings settings)
+        {
+            var user = _clientManager.FetchUserProfile(settings);
+            var torqueClient = _clientManager.GetClient(user);
+
+            var blueprintList = await torqueClient.BlueprintsAllAsync(settings.Space);
+            AnsiConsole.MarkupLine("Blueprint List");
+
+            foreach (var bp in blueprintList)
+            {
+                var result = bp.Name;
+                AnsiConsole.WriteLine(result);
+            }
+
+            return 0;
+        }
     }
 }

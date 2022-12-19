@@ -12,4 +12,8 @@ public abstract class BaseSettings : CommandSettings
     [CommandOption("-t|--token")]
     [Description("The user long token")]
     public string? Token { get; set; }
+    
+    [CommandOption("-p|--profile")]
+    [Description("The user profile name")]
+    public string? Profile { get; set; }
 }
