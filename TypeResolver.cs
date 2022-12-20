@@ -1,28 +1,32 @@
-using Microsoft.Extensions.DependencyInjection;
+using System;
 using Spectre.Console.Cli;
 
-namespace Torque.Cli
+namespace Torque.Cli;
+
+public sealed class TypeResolver : ITypeResolver, IDisposable
 {
-    public sealed class TypeResolver : ITypeResolver, IDisposable
+    private readonly IServiceProvider _provider;
+
+    public TypeResolver(IServiceProvider provider)
     {
-        private readonly IServiceProvider _provider;
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+    }
 
-        public TypeResolver(IServiceProvider provider)
+    public object Resolve(Type type)
+    {
+        if (type == null)
         {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            return null;
         }
 
-        public object Resolve(Type type)
-        {
-            return _provider.GetRequiredService(type);
-        }
+        return _provider.GetService(type);
+    }
 
-        public void Dispose()
+    public void Dispose()
+    {
+        if (_provider is IDisposable disposable)
         {
-            if (_provider is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            disposable.Dispose();
         }
     }
 }
