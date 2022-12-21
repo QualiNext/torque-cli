@@ -15,18 +15,20 @@ public class ClientManager : IClientManager
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IUserProfilesManager _userProfilesManager;
+    private readonly IEnvironmentProvider _environmentProvider;
 
-    public ClientManager(IHttpClientFactory httpClientFactory, IUserProfilesManager userProfilesManager)
+    public ClientManager(IHttpClientFactory httpClientFactory, IUserProfilesManager userProfilesManager, IEnvironmentProvider environmentProvider)
     {
         _httpClientFactory = httpClientFactory;
         _userProfilesManager = userProfilesManager;
+        _environmentProvider = environmentProvider;
     }
 
     public TorqueApiClient GetClient(UserProfile userProfile)
     {
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient("Default");
         var token = userProfile.Token;
-        var baseUrl = Environment.GetEnvironmentVariable("TORQUE_SERVER_URL") ?? "https://portal.qtorque.io/api/";
+        var baseUrl = _environmentProvider.GetEnvironmentVariable(Constants.BaseUrlEnvVarName) ?? Constants.DefaultTorqueUrl;
         
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return new TorqueApiClient(baseUrl, httpClient);

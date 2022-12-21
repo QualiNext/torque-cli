@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Quali.Torque.Cli.Commands.Blueprints;
+using Quali.Torque.Cli.Utils;
 using Spectre.Console.Cli;
-using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli;
 
@@ -12,18 +12,13 @@ public class Program
     {
         var services = new ServiceCollection();
 
-        services.AddHttpClient<TorqueApiClient>(configure =>
+        services.AddHttpClient<HttpClient>("Default", configure =>
         {
-            var userAgentHeader = Environment.GetEnvironmentVariable("TORQUE_USERAGENT") ?? "Torque-CLI/1.0.0"; 
-            configure.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(userAgentHeader));
+            // var userAgentHeader = Environment.GetEnvironmentVariable(Constants.UserAgentEnvVarName) ?? "Torque-CLI/1.0.0"; 
+            var version = PackageVersionExtractor.GetVersion();
+            var productValue = new ProductInfoHeaderValue(Constants.UserAgentValue, version);
+            configure.DefaultRequestHeaders.UserAgent.Add(productValue);
         });
-        // services.AddHttpClient(httpClient =>
-        // {
-        //     // TODO: version shouldn't be hardcoded
-        //     var userAgentHeader = Environment.GetEnvironmentVariable("TORQUE_USERAGENT") ?? "Torque-CLI/1.0.0"; 
-        //     httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(userAgentHeader));
-        // });
-        
         services.AddSingleton<IUserProfilesManager, UserProfilesManager>();
         services.AddSingleton<IEnvironmentProvider, EnvironmentProvider>();
 

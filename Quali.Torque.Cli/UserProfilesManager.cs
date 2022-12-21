@@ -17,7 +17,7 @@ public class UserProfilesManager : IUserProfilesManager
     public UserProfilesManager(IEnvironmentProvider environmentProvider)
     {
         //TODO: Move to constant file
-        var configPath = environmentProvider.GetEnvironmentVariable("TORQUE_CONFIG_PATH"); 
+        var configPath = environmentProvider.GetEnvironmentVariable(Constants.ConfigFileEnvVarName); 
         
         if (!String.IsNullOrEmpty(configPath))
         {

@@ -23,7 +23,7 @@ namespace Quali.Torque.Cli.Commands.Blueprints
                 var user = _clientManager.FetchUserProfile(settings);
                 var torqueClient = _clientManager.GetClient(user);
 
-                var blueprintList = await torqueClient.BlueprintsAllAsync(settings.Space);
+                var blueprintList = await torqueClient.BlueprintsAllAsync(user.Space);
 
                 if (blueprintList.Count > 0)
                 {
