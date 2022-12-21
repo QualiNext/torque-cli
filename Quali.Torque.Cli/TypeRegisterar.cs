@@ -1,8 +1,7 @@
-using System;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
-namespace Torque.Cli;
+namespace Quali.Torque.Cli;
 
 public sealed class TypeRegistrar : ITypeRegistrar
 {

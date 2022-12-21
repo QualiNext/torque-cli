@@ -1,7 +1,6 @@
-using System;
 using Spectre.Console.Cli;
 
-namespace Torque.Cli;
+namespace Quali.Torque.Cli;
 
 public sealed class TypeResolver : ITypeResolver, IDisposable
 {
