@@ -5,12 +5,18 @@ using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli;
 
-public class ClientManager
+public interface IClientManager
+{
+    TorqueApiClient GetClient(UserProfile userProfile);
+    UserProfile FetchUserProfile(BaseSettings settings);
+}
+
+public class ClientManager : IClientManager
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly UserProfilesManager _userProfilesManager;
+    private readonly IUserProfilesManager _userProfilesManager;
 
-    public ClientManager(IHttpClientFactory httpClientFactory, UserProfilesManager userProfilesManager)
+    public ClientManager(IHttpClientFactory httpClientFactory, IUserProfilesManager userProfilesManager)
     {
         _httpClientFactory = httpClientFactory;
         _userProfilesManager = userProfilesManager;

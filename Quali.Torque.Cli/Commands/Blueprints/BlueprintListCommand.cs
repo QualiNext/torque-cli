@@ -6,26 +6,39 @@ namespace Quali.Torque.Cli.Commands.Blueprints
 {
     internal class BlueprintListCommand : AsyncCommand<BlueprintListCommandSettings>
     {
-        private readonly ClientManager _clientManager;
+        private readonly IClientManager _clientManager;
+        private readonly IConsoleWriter _consoleWriter;
 
-        public BlueprintListCommand(ClientManager clientManager)
+        public BlueprintListCommand(IClientManager clientManager,
+            IConsoleWriter consoleWriter)
         {
             _clientManager = clientManager;
+            _consoleWriter = consoleWriter;
         }
 
         public override async Task<int> ExecuteAsync(CommandContext context, BlueprintListCommandSettings settings)
         {
-            var user = _clientManager.FetchUserProfile(settings);
-            var torqueClient = _clientManager.GetClient(user);
-
-            var blueprintList = await torqueClient.BlueprintsAllAsync(settings.Space);
-            AnsiConsole.MarkupLine("Blueprint List");
-
-            foreach (var bp in blueprintList)
+            try
             {
-                var result = bp.Name;
-                AnsiConsole.WriteLine(result);
+                var user = _clientManager.FetchUserProfile(settings);
+                var torqueClient = _clientManager.GetClient(user);
+
+                var blueprintList = await torqueClient.BlueprintsAllAsync(settings.Space);
+
+                if (blueprintList.Count > 0)
+                {
+                    _consoleWriter.WriteBlueprintList(blueprintList);    
+                }
+                else
+                {
+                    _consoleWriter.WriteEmptyBlueprintList();
+                }
             }
+            catch (Exception ex)
+            {
+                _consoleWriter.WriteError($"Some error: {ex.Message}");
+            }
+            
 
             return 0;
         }
