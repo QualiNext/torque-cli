@@ -1,9 +1,9 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
-using Torque.Cli.Commands.Blueprints;
+using Quali.Torque.Cli.Commands.Blueprints;
 using Spectre.Console.Cli;
 
-namespace Torque.Cli;
+namespace Quali.Torque.Cli;
 
 public class Program
 {

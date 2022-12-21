@@ -1,9 +1,9 @@
 using System.Net.Http.Headers;
+using Quali.Torque.Cli.Commands.Base;
+using Quali.Torque.Cli.Models;
 using Torque.Cli.Api;
-using Torque.Cli.Commands.Base;
-using Torque.Cli.Models;
 
-namespace Torque.Cli;
+namespace Quali.Torque.Cli;
 
 public class ClientManager
 {

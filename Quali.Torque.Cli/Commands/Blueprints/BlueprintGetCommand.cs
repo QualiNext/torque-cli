@@ -1,10 +1,10 @@
-using Spectre.Console.Cli;
-using Spectre.Console;
 using System.ComponentModel;
-using Torque.Cli.Api;
 using System.Net.Http.Headers;
+using Spectre.Console;
+using Spectre.Console.Cli;
+using Torque.Cli.Api;
 
-namespace Torque.Cli.Commands.Blueprints;
+namespace Quali.Torque.Cli.Commands.Blueprints;
 
 public sealed class BlueprintGetCommand : AsyncCommand<BlueprintGetCommand.Settings>
 {
@@ -13,11 +13,11 @@ public sealed class BlueprintGetCommand : AsyncCommand<BlueprintGetCommand.Setti
     {
         [CommandArgument(0, "<BLUEPRINT-NAME>")]
         [Description("The blueprint name to show")]
-        public string? BlueprintName { get; set; }
+        public string BlueprintName { get; set; }
 
         [CommandArgument(1, "<REPOSITORY-NAME>")]
         [Description("The repository name to find a blueprint from")]
-        public string? RepositoryName { get; set; }
+        public string RepositoryName { get; set; }
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)

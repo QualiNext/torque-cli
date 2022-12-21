@@ -1,8 +1,8 @@
-using Spectre.Console.Cli;
+using Quali.Torque.Cli.Models.Settings.Blueprints;
 using Spectre.Console;
-using Torque.Cli.Models.Settings.Blueprints;
+using Spectre.Console.Cli;
 
-namespace Torque.Cli.Commands.Blueprints
+namespace Quali.Torque.Cli.Commands.Blueprints
 {
     internal class BlueprintListCommand : AsyncCommand<BlueprintListCommandSettings>
     {

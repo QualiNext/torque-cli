@@ -1,14 +1,14 @@
+using Quali.Torque.Cli.Models;
 using Salaros.Configuration;
-using Torque.Cli.Models;
 
-namespace Torque.Cli;
+namespace Quali.Torque.Cli;
 
 public class UserProfilesManager
 {
     private string _configPath;
     private readonly ConfigParser _configParser;
 
-    public UserProfilesManager(string? configPath)
+    public UserProfilesManager(string configPath)
     {
         if (!String.IsNullOrEmpty(configPath))
             _configPath = configPath;
