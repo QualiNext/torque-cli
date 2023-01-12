@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using Quali.Torque.Cli.Commands.Base;
 using Quali.Torque.Cli.Models;
 using Torque.Cli.Api;
+using static System.String;
 
 namespace Quali.Torque.Cli;
 
@@ -39,11 +40,14 @@ public class ClientManager : IClientManager
         var profileName = settings.Profile ?? "default";
         var userProfile = _userProfilesManager.ReadUserProfile(profileName);
 
-        if (!String.IsNullOrEmpty(settings.Space))
+        if (!IsNullOrEmpty(settings.Space))
             userProfile.Space = settings.Space;
         
-        if (!String.IsNullOrEmpty(settings.Token))
+        if (!IsNullOrEmpty(settings.Token))
             userProfile.Token = settings.Token;
+
+        if (!IsNullOrEmpty(settings.RepositoryName))
+            userProfile.RepositoryName = settings.RepositoryName;
 
         return userProfile;
     }

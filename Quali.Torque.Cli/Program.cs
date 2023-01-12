@@ -32,14 +32,14 @@ public class Program
         {
             config.SetApplicationName("torque");
             config.ValidateExamples();
-    
+
             config.AddBranch("bp", blueprint =>
             {
                 blueprint.SetDescription("Get, List, Validate blueprints.");
                 
                 blueprint.AddCommand<BlueprintGetCommand>("get")
                     .WithDescription("Get blueprint by Name.")
-                    .WithExample(new [] { "bp", "get", "MyBp", "demo"});
+                    .WithExample(new [] { "bp", "get", "MyBp"});
 
                 blueprint.AddCommand<BlueprintListCommand>("list")
                     .WithDescription("List blueprints")

@@ -16,4 +16,8 @@ public abstract class BaseSettings : CommandSettings
     [CommandOption("-p|--profile")]
     [Description("The user profile name")]
     public string Profile { get; set; }
+    
+    [CommandOption("-r|--repo")]
+    [Description("The repository name to use with command")]
+    public string RepositoryName { get; set; }
 }
