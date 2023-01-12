@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using Spectre.Console.Cli;
 
-namespace Quali.Torque.Cli.Commands.Base;
+namespace Quali.Torque.Cli.Models.Settings.Base;
 
 public abstract class BaseSettings : CommandSettings
 {

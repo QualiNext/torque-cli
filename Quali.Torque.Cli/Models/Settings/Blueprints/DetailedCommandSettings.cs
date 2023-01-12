@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using Quali.Torque.Cli.Commands.Base;
+using Quali.Torque.Cli.Models.Settings.Base;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Blueprints;

@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
-using Quali.Torque.Cli.Commands.Base;
 using Quali.Torque.Cli.Models;
+using Quali.Torque.Cli.Models.Settings.Base;
 using Torque.Cli.Api;
 using static System.String;
 
