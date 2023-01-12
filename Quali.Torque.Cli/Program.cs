@@ -22,7 +22,7 @@ public class Program
         services.AddSingleton<IUserProfilesManager, UserProfilesManager>();
         services.AddSingleton<IEnvironmentProvider, EnvironmentProvider>();
 
-        services.AddSingleton<IConsoleWriter, ConsoleWriter>(); 
+        services.AddSingleton<IConsoleWriter, SpectreConsoleWriter>(); 
         services.AddSingleton<IClientManager, ClientManager>();
 
         var registrar = new TypeRegistrar(services);

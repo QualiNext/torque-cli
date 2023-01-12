@@ -1,38 +1,45 @@
-using System.ComponentModel;
-using System.Net.Http.Headers;
-using Spectre.Console;
+using Quali.Torque.Cli.Models.Settings.Blueprints;
 using Spectre.Console.Cli;
-using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public sealed class BlueprintGetCommand : AsyncCommand<BlueprintGetCommand.Settings>
+internal class BlueprintGetCommand : AsyncCommand<BlueprintGetCommandSettings>
 {
-    // public class Settings : Base.BaseSettings
-    public sealed class Settings : Base.BaseSettings
-    {
-        [CommandArgument(0, "<BLUEPRINT-NAME>")]
-        [Description("The blueprint name to show")]
-        public string BlueprintName { get; set; }
+    private readonly IClientManager _clientManager;
+    private readonly IConsoleWriter _consoleWriter;
 
-        [CommandArgument(1, "<REPOSITORY-NAME>")]
-        [Description("The repository name to find a blueprint from")]
-        public string RepositoryName { get; set; }
+    public BlueprintGetCommand(IClientManager clientManager,
+        IConsoleWriter consoleWriter)
+    {
+        _clientManager = clientManager;
+        _consoleWriter = consoleWriter;
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
     {
-        var token = settings.Token;
-        var space = settings.Space;
-        var httpClient = new HttpClient();
+        try
+        {
+            var user = _clientManager.FetchUserProfile(settings);
+            var torqueClient = _clientManager.GetClient(user);
 
-        // HttpClient.BaseAddress = new Uri("https://portal.qtorque.io/api");
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var client = new TorqueApiClient("https://portal.qtorque.io/api/", httpClient);
-        var blueprintDetails = await client.CatalogGETAsync(space, settings.BlueprintName, settings.RepositoryName);
+            var blueprintDetails =
+                await torqueClient.CatalogGETAsync(user.Space, settings.BlueprintName, user.RepositoryName);
 
-        AnsiConsole.MarkupLine($"[bold]Get Blueprint =>[/] name[[{settings.BlueprintName}]]");
-        AnsiConsole.WriteLine($"Details: {blueprintDetails.Details}");
-        return 0;
+            if (settings.Detail)
+            {
+                _consoleWriter.DumpJson(blueprintDetails);
+            }
+            else
+            {
+                _consoleWriter.WriteBlueprintDetails(blueprintDetails);
+            }
+                
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            _consoleWriter.WriteError(ex);
+            return 1;
+        }
     }
 }
