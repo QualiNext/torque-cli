@@ -2,45 +2,52 @@ using Quali.Torque.Cli.Models.Settings.Blueprints;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace Quali.Torque.Cli.Commands.Blueprints
+namespace Quali.Torque.Cli.Commands.Blueprints;
+
+internal class BlueprintListCommand : AsyncCommand<DetailedCommandSettings>
 {
-    internal class BlueprintListCommand : AsyncCommand<BlueprintListCommandSettings>
+    private readonly IClientManager _clientManager;
+    private readonly IConsoleWriter _consoleWriter;
+
+    public BlueprintListCommand(IClientManager clientManager,
+        IConsoleWriter consoleWriter)
     {
-        private readonly IClientManager _clientManager;
-        private readonly IConsoleWriter _consoleWriter;
+        _clientManager = clientManager;
+        _consoleWriter = consoleWriter;
+    }
 
-        public BlueprintListCommand(IClientManager clientManager,
-            IConsoleWriter consoleWriter)
+    public override async Task<int> ExecuteAsync(CommandContext context, DetailedCommandSettings settings)
+    {
+        try
         {
-            _clientManager = clientManager;
-            _consoleWriter = consoleWriter;
-        }
+            var user = _clientManager.FetchUserProfile(settings);
+            var torqueClient = _clientManager.GetClient(user);
 
-        public override async Task<int> ExecuteAsync(CommandContext context, BlueprintListCommandSettings settings)
-        {
-            try
+            var blueprintList = await torqueClient.BlueprintsAllAsync(user.Space);
+
+            if (blueprintList.Count > 0)
             {
-                var user = _clientManager.FetchUserProfile(settings);
-                var torqueClient = _clientManager.GetClient(user);
-
-                var blueprintList = await torqueClient.BlueprintsAllAsync(user.Space);
-
-                if (blueprintList.Count > 0)
+                if (settings.Detail)
                 {
-                    _consoleWriter.WriteBlueprintList(blueprintList);    
+                    _consoleWriter.DumpJson(blueprintList);
                 }
                 else
                 {
-                    _consoleWriter.WriteEmptyBlueprintList();
+                    _consoleWriter.WriteBlueprintList(blueprintList);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                _consoleWriter.WriteError($"Some error: {ex.Message}");
+                _consoleWriter.WriteEmptyBlueprintList();
             }
+        }
+        catch (Exception ex)
+        {
+            _consoleWriter.WriteError(ex);
+            return 1;
+        }
             
 
-            return 0;
-        }
+        return 0;
     }
 }
