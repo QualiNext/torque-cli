@@ -8026,7 +8026,8 @@ namespace Torque.Cli.Api
         public string Name { get; set; }
 
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public BlueprintInputType Type { get; set; }
+        // public BlueprintInputType Type { get; set; }
+        public string Type { get; set; }
 
         [Newtonsoft.Json.JsonProperty("default_value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Default_value { get; set; }
