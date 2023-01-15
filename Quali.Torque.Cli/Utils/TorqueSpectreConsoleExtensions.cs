@@ -9,4 +9,12 @@ public static class SpectreConsoleTorqueExtensions
     {
         grid.AddRow(new Text(key, new Style(Color.LightGreen)), value);
     }
+
+    public static string MaskToken(this string tokenString)
+    {
+        if (string.IsNullOrEmpty(tokenString))
+            return "";
+
+        return tokenString.Length > 3 ? $"******{tokenString[^4..]}" : "******";
+    }
 }

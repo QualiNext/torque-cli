@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.ComponentModel;
+using Newtonsoft.Json;
+using Quali.Torque.Cli.Models;
 using Spectre.Console;
 using Spectre.Console.Json;
 using Torque.Cli.Api;
@@ -6,16 +8,18 @@ using Quali.Torque.Cli.Utils;
 
 namespace Quali.Torque.Cli;
 
-public interface IConsoleWriter
+public interface IConsoleManager
 {
     void WriteBlueprintList(ICollection<BlueprintForGetAllResponse> blueprintList);
     void WriteBlueprintDetails(BlueprintDetailsResponse blueprintDetails);
     void WriteEmptyBlueprintList();
+    void WriteProfilesList(List<UserProfile> userProfiles);
     void WriteError(Exception ex);
     void DumpJson(object obj);
+    T ReadUserInput<T>(string message, bool optional = false, bool masked = false);
 }
 
-public sealed class SpectreConsoleWriter : IConsoleWriter
+public sealed class SpectreConsoleManager : IConsoleManager
 {
     public void WriteBlueprintList(ICollection<BlueprintForGetAllResponse> blueprintList)
     {
@@ -69,6 +73,19 @@ public sealed class SpectreConsoleWriter : IConsoleWriter
         throw new NotImplementedException();
     }
 
+    public void WriteProfilesList(List<UserProfile> userProfiles)
+    {
+        var table = new Table();
+        table.Border(TableBorder.Minimal);
+        table.Title = new TableTitle("Torque user profiles");
+        table.AddColumns("Profile Name", "Space", "Repository", "Token");
+        foreach (var profile in userProfiles)
+        {
+            table.AddRow(profile.Name, profile.Space, profile.RepositoryName, profile.Token.MaskToken());
+        }
+        AnsiConsole.Write(table);
+    }
+
     public void WriteError(Exception ex)
     {
         AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
@@ -78,5 +95,18 @@ public sealed class SpectreConsoleWriter : IConsoleWriter
     {
         var json = JsonConvert.SerializeObject(obj);
         AnsiConsole.Write(new JsonText(json));
+    }
+
+    public T ReadUserInput<T>(string message, bool optional = false, bool masked = false)
+    {
+        var textPrompt = new TextPrompt<T>(message.EscapeMarkup());
+
+        if (optional)
+            textPrompt.AllowEmpty();
+
+        if (masked)
+            textPrompt.Secret();
+
+        return AnsiConsole.Prompt(textPrompt);
     }
 }

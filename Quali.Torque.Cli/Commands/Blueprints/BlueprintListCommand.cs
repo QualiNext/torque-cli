@@ -1,5 +1,4 @@
 using Quali.Torque.Cli.Models.Settings.Blueprints;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
@@ -7,13 +6,13 @@ namespace Quali.Torque.Cli.Commands.Blueprints;
 internal class BlueprintListCommand : AsyncCommand<DetailedCommandSettings>
 {
     private readonly IClientManager _clientManager;
-    private readonly IConsoleWriter _consoleWriter;
+    private readonly IConsoleManager _consoleManager;
 
     public BlueprintListCommand(IClientManager clientManager,
-        IConsoleWriter consoleWriter)
+        IConsoleManager consoleManager)
     {
         _clientManager = clientManager;
-        _consoleWriter = consoleWriter;
+        _consoleManager = consoleManager;
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context, DetailedCommandSettings settings)
@@ -29,21 +28,21 @@ internal class BlueprintListCommand : AsyncCommand<DetailedCommandSettings>
             {
                 if (settings.Detail)
                 {
-                    _consoleWriter.DumpJson(blueprintList);
+                    _consoleManager.DumpJson(blueprintList);
                 }
                 else
                 {
-                    _consoleWriter.WriteBlueprintList(blueprintList);
+                    _consoleManager.WriteBlueprintList(blueprintList);
                 }
             }
             else
             {
-                _consoleWriter.WriteEmptyBlueprintList();
+                _consoleManager.WriteEmptyBlueprintList();
             }
         }
         catch (Exception ex)
         {
-            _consoleWriter.WriteError(ex);
+            _consoleManager.WriteError(ex);
             return 1;
         }
             

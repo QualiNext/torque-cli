@@ -5,8 +5,9 @@ namespace Quali.Torque.Cli;
 
 public interface IUserProfilesManager
 {
-    void WriteUserProfile(string profileName, UserProfile profile);
+    void WriteUserProfile(UserProfile profile);
     UserProfile ReadUserProfile(string profileName);
+    List<UserProfile> ListUserProfiles();
 }
 
 public class UserProfilesManager : IUserProfilesManager
@@ -16,7 +17,6 @@ public class UserProfilesManager : IUserProfilesManager
 
     public UserProfilesManager(IEnvironmentProvider environmentProvider)
     {
-        //TODO: Move to constant file
         var configPath = environmentProvider.GetEnvironmentVariable(Constants.ConfigFileEnvVarName); 
         
         if (!String.IsNullOrEmpty(configPath))
@@ -42,17 +42,24 @@ public class UserProfilesManager : IUserProfilesManager
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Some error message", ex);
+            throw new InvalidOperationException("Unable to create parser", ex);
         }
     }
 
-    public void WriteUserProfile(string profileName, UserProfile profile)
+    public void WriteUserProfile(UserProfile profile)
     {
-        _configParserLazy.Value.SetValue(profileName, "token", profile.Token);
-        _configParserLazy.Value.SetValue(profileName, "space", profile.Space);
-        _configParserLazy.Value.SetValue(profileName, "repository", profile.RepositoryName);
-
-        _configParserLazy.Value.Save();
+        if (!string.IsNullOrEmpty(profile.Name))
+        {
+            _configParserLazy.Value.SetValue(profile.Name, "token", profile.Token);
+            _configParserLazy.Value.SetValue(profile.Name, "space", profile.Space);
+            _configParserLazy.Value.SetValue(profile.Name, "repository", profile.RepositoryName);
+            
+            _configParserLazy.Value.Save();
+        }
+        else
+        {
+            throw new ArgumentException("Profile name must be defined");
+        }
     }
 
     public UserProfile ReadUserProfile(string profileName)
@@ -61,8 +68,32 @@ public class UserProfilesManager : IUserProfilesManager
         {
             Space = _configParserLazy.Value.GetValue(profileName, "space", ""),
             Token = _configParserLazy.Value.GetValue(profileName, "token", ""),
-            RepositoryName = _configParserLazy.Value.GetValue(profileName, "repository", "")
+            RepositoryName = _configParserLazy.Value.GetValue(profileName, "repository", ""),
+            Name = profileName
         };
         return userProfile;
+    }
+
+    public List<UserProfile> ListUserProfiles()
+    {
+        var userProfiles = new List<UserProfile>();
+        foreach (var profileName in _configParserLazy.Value.Sections.Select(section => section.SectionName).ToList())
+        {
+            userProfiles.Add(new UserProfile
+            {
+                Name = profileName,
+                Space = _configParserLazy.Value.GetValue(profileName, "space", ""),
+                Token = _configParserLazy.Value.GetValue(profileName, "token", ""),
+                RepositoryName = _configParserLazy.Value.GetValue(profileName, "repository", "")
+            });
+        }
+
+        return userProfiles;
+    }
+
+    // TODO: Looks like there is no way to remove section using this library
+    public void RemoveUserProfile(string profileName)
+    {
+        throw new NotImplementedException();
     }
 }

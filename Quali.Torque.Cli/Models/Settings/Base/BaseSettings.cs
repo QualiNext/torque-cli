@@ -3,7 +3,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Base;
 
-public abstract class BaseSettings : CommandSettings
+public class BaseSettings : CommandSettings
 {
     [CommandOption("-s|--space")]
     [Description("The space name")]

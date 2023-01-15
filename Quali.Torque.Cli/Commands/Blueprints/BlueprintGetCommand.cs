@@ -6,13 +6,12 @@ namespace Quali.Torque.Cli.Commands.Blueprints;
 internal class BlueprintGetCommand : AsyncCommand<BlueprintGetCommandSettings>
 {
     private readonly IClientManager _clientManager;
-    private readonly IConsoleWriter _consoleWriter;
+    private readonly IConsoleManager _consoleManager;
 
-    public BlueprintGetCommand(IClientManager clientManager,
-        IConsoleWriter consoleWriter)
+    public BlueprintGetCommand(IClientManager clientManager, IConsoleManager consoleManager)
     {
         _clientManager = clientManager;
-        _consoleWriter = consoleWriter;
+        _consoleManager = consoleManager;
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
@@ -27,18 +26,18 @@ internal class BlueprintGetCommand : AsyncCommand<BlueprintGetCommandSettings>
 
             if (settings.Detail)
             {
-                _consoleWriter.DumpJson(blueprintDetails);
+                _consoleManager.DumpJson(blueprintDetails);
             }
             else
             {
-                _consoleWriter.WriteBlueprintDetails(blueprintDetails);
+                _consoleManager.WriteBlueprintDetails(blueprintDetails);
             }
                 
             return 0;
         }
         catch (Exception ex)
         {
-            _consoleWriter.WriteError(ex);
+            _consoleManager.WriteError(ex);
             return 1;
         }
     }
