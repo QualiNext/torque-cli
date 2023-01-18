@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Blueprints;
 
-internal class BlueprintValidateCommandSettings : DetailedCommandSettings
+public class BlueprintValidateCommandSettings : DetailedCommandSettings
 {
     [CommandArgument(0, "<BLUEPRINT-FILE>")]
     [Description("The path to a file with a blueprint ")]

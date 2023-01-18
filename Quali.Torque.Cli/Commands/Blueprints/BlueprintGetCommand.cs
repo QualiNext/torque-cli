@@ -3,16 +3,10 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-internal class BlueprintGetCommand : AsyncCommand<BlueprintGetCommandSettings>
+public class BlueprintGetCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
 {
-    private readonly IClientManager _clientManager;
-    private readonly IConsoleManager _consoleManager;
-
-    public BlueprintGetCommand(IClientManager clientManager, IConsoleManager consoleManager)
-    {
-        _clientManager = clientManager;
-        _consoleManager = consoleManager;
-    }
+    public BlueprintGetCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
+        consoleManager) {}
 
     public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
     {

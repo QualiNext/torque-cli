@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
 
-internal class EnvironmentGetCommandSettings: DetailedCommandSettings
+public class EnvironmentGetCommandSettings: DetailedCommandSettings
 {
     [CommandArgument(0, "<ENVIRONMENT-ID>")]
     [Description("The environment id to show")]

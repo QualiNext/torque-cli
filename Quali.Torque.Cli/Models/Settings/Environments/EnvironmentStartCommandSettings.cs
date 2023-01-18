@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
 
-internal class EnvironmentStartCommandSettings: DetailedCommandSettings
+public class EnvironmentStartCommandSettings: DetailedCommandSettings
 {
     [CommandArgument(0, "<BLUEPRINT-NAME>")]
     [Description("The bluerpint name to run an envrironment from")]

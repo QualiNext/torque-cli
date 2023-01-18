@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
 
-internal class EnvironmentListCommandSettings: DetailedCommandSettings
+public class EnvironmentListCommandSettings: DetailedCommandSettings
 {
     [CommandOption("--show-ended")]
     [Description("Show ended environments")]

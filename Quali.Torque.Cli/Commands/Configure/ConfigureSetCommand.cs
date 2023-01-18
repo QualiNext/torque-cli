@@ -5,7 +5,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Configure;
 
-internal class ConfigureSetCommand: Command<BaseSettings>
+public class ConfigureSetCommand: Command<BaseSettings>
 {
     private readonly IConsoleManager _consoleManager;
     private readonly IUserProfilesManager _profilesManager;
