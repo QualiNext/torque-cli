@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Quali.Torque.Cli.Models;
 using Spectre.Console;
 using Spectre.Console.Json;
@@ -18,6 +17,11 @@ public interface IConsoleManager
     void WriteError(Exception ex);
     void DumpJson(object obj);
     T ReadUserInput<T>(string message, bool optional = false, bool masked = false);
+    void WriteEnvironmentCreated(string envId, string envUrl);
+    Task WaitEnvironment(EnvironmentWaiterData data);
+    void WriteEnvironmentEnded(string envId);
+    void WriteEnvironmentDetails(EnvironmentDetailsResponse environment);
+    void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList);
 }
 
 public sealed class SpectreConsoleManager : IConsoleManager
@@ -71,7 +75,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
         grid.AddGridDetailsRow("Name", new Text(blueprintDetails.Details.Name));
         grid.AddGridDetailsRow("Description", new Text(blueprintDetails.Details.Description));
         grid.AddGridDetailsRow("Repository", new Text(blueprintDetails.Details.Repository_name));
-        
+
         if (blueprintDetails.Details.Inputs.Count > 0)
         {
             var inputRows = blueprintDetails.Details.Inputs.Select(input => input.Has_default_value
@@ -132,5 +136,105 @@ public sealed class SpectreConsoleManager : IConsoleManager
             textPrompt.Secret();
 
         return AnsiConsole.Prompt(textPrompt);
+    }
+
+    public void WriteEnvironmentCreated(string envId, string envUrl)
+    {
+        AnsiConsole.Write(new Rows(
+            new Text($"ID: {envId}", new Style(Color.Blue)),
+            new Text($"Url: {envUrl}", new Style(Color.Green))
+        ));
+
+    }
+
+    public async Task WaitEnvironment(EnvironmentWaiterData data)
+    {
+        var spinnerMsg = $"Starting an environment {data.EnvironmentId}...";
+        await AnsiConsole.Status()
+            .SpinnerStyle(Style.Parse("green bold"))
+            .StartAsync(spinnerMsg, async ctx =>
+            {
+                var startTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+                var env = await data.Client.EnvironmentsGETAsync(data.Space, data.EnvironmentId);
+                var lastGrainStates = new Dictionary<string, string>();
+
+                while (DateTimeOffset.Now.ToUnixTimeSeconds() - startTime < data.Timeout * 60)
+                {
+                    var status = env.Details.Computed_status;
+                    if (Constants.EnvFinalStatuses.Contains(status))
+                    {
+                        if (status == Constants.SuccessStatus)
+                        {
+                            AnsiConsole.MarkupLine("[green bold]Environment started successfully![/]");
+                            return true;
+                        }
+
+                        AnsiConsole.MarkupLine(
+                            $"[red]Environment failed to start. Current status [bold]{status}[/]");
+                        return false;
+                    }
+
+                    await Task.Delay(5000);
+
+                    env = await data.Client.EnvironmentsGETAsync(data.Space, data.EnvironmentId);
+
+                    foreach (var grain in env.Details.State.Grains)
+                    {
+                        lastGrainStates.TryGetValue(grain.Name, out var state);
+
+                        if (state == grain.State.Current_state) continue;
+                        lastGrainStates[grain.Name] = grain.State.Current_state;
+                        AnsiConsole.MarkupLine(
+                            $"[blue]Grain {grain.Name} is now [bold]{grain.State.Current_state}[/][/]");
+                    }
+
+                    ctx.Status($"{spinnerMsg} {DateTimeOffset.Now.ToUnixTimeSeconds() - startTime} sec");
+                }
+
+                throw new TimeoutException($"Environment was not active after {data.Timeout.ToString()} minutes");
+
+            });
+    }
+
+    public void WriteEnvironmentEnded(string envId)
+    {
+        AnsiConsole.MarkupLine($"[blue]Request to end environment [bold]{envId}[/] has been sent[/]");
+    }
+
+    public void WriteEnvironmentDetails(EnvironmentDetailsResponse environment)
+    {
+        var grid = new Grid();
+        grid.AddColumn();
+        grid.AddColumn();
+
+        grid.AddGridDetailsRow("ID", new Text(environment.Id));
+        grid.AddGridDetailsRow("Name", new Text(environment.Definition.Metadata.Name));
+        grid.AddGridDetailsRow("Blueprint Name", new Text(environment.Definition.Metadata.Blueprint_name));
+        grid.AddGridDetailsRow("State", new Text(environment.Computed_status));
+
+        var grainRows =
+            environment.State.Grains.Select(grain => new Markup($"[aqua bold]{grain.Name}[/]: {grain.State.Current_state}"))
+                .ToList();
+        grid.AddGridDetailsRow("Grains", new Rows(grainRows));
+
+        AnsiConsole.Write(grid);
+    }
+
+    public void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList)
+    {
+        var table = new Table
+        {
+            Title = new TableTitle($"Torque environments")
+        };
+        table.AddColumns("Id", "Name", "Blueprint Name", "Status");
+        foreach (var env in envList)
+        {
+            table.AddRow(
+                env.Id,
+                env.Details.Definition.Metadata.Name.EscapeMarkup(),
+                env.Details.Definition.Metadata.Blueprint_name.EscapeMarkup(),
+                env.Details.Computed_status);
+        }
+        AnsiConsole.Write(table);
     }
 }
