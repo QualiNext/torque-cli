@@ -12,7 +12,8 @@ public interface IConsoleManager
 {
     void WriteBlueprintList(ICollection<BlueprintForGetAllResponse> blueprintList);
     void WriteBlueprintDetails(BlueprintDetailsResponse blueprintDetails);
-    void WriteEmptyBlueprintList();
+    void WriteBlueprintsErrors(BlueprintValidationResponse result);
+    void WriteEmptyList(string title);
     void WriteProfilesList(List<UserProfile> userProfiles);
     void WriteError(Exception ex);
     void DumpJson(object obj);
@@ -23,13 +24,36 @@ public sealed class SpectreConsoleManager : IConsoleManager
 {
     public void WriteBlueprintList(ICollection<BlueprintForGetAllResponse> blueprintList)
     {
-        var table = new Table();
+        var table = new Table
+        {
+            Title = new TableTitle($"Torque blueprints")
+        };
         table.AddColumns("Name", "Repository Name", "Published", "Description");
         foreach (var bp in blueprintList)
         {
             table.AddRow(bp.Name.EscapeMarkup(), bp.Repository_name, bp.Enabled.ToString(), bp.Description ?? "");
         }
 
+        AnsiConsole.Write(table);
+    }
+    
+    public void WriteBlueprintsErrors(BlueprintValidationResponse result)
+    {
+        if (result.Errors.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[green bold]Blueprint is valid[/]");
+            return;
+        }
+        var table = new Table
+        {
+            Title = new TableTitle($"Blueprint Errors")
+        };
+        table.AddColumns("Code", "Name", "Message");
+        table.BorderColor(Color.Red);
+        foreach (var error in result.Errors)
+        {
+            table.AddRow(error.Code, error.Name, error.Message);
+        }
         AnsiConsole.Write(table);
     }
 
@@ -68,9 +92,9 @@ public sealed class SpectreConsoleManager : IConsoleManager
         AnsiConsole.Write(grid);
     }
 
-    public void WriteEmptyBlueprintList()
+    public void WriteEmptyList(string title)
     {
-        throw new NotImplementedException();
+        AnsiConsole.MarkupLine($"[red]{title}[/]");
     }
 
     public void WriteProfilesList(List<UserProfile> userProfiles)
