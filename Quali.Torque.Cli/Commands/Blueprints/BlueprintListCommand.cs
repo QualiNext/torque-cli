@@ -37,7 +37,7 @@ internal class BlueprintListCommand : AsyncCommand<DetailedCommandSettings>
             }
             else
             {
-                _consoleManager.WriteEmptyBlueprintList();
+                _consoleManager.WriteEmptyList("No blueprints found");
             }
         }
         catch (Exception ex)
