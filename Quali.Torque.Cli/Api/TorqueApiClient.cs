@@ -2360,9 +2360,9 @@ namespace Torque.Cli.Api
         /// <param name="space_name">Name of the space that the blueprint is supposed to be in</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<BlueprintValidationResponse> BlueprintsAsync(string space_name, BlueprintValidationRequest body)
+        public virtual System.Threading.Tasks.Task<BlueprintValidationResponse> BlueprintValidateAsync(string space_name, BlueprintValidationRequest body)
         {
-            return BlueprintsAsync(space_name, body, System.Threading.CancellationToken.None);
+            return BlueprintValidateAsync(space_name, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -2375,7 +2375,7 @@ namespace Torque.Cli.Api
         /// <param name="space_name">Name of the space that the blueprint is supposed to be in</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<BlueprintValidationResponse> BlueprintsAsync(string space_name, BlueprintValidationRequest body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<BlueprintValidationResponse> BlueprintValidateAsync(string space_name, BlueprintValidationRequest body, System.Threading.CancellationToken cancellationToken)
         {
             if (space_name == null)
                 throw new System.ArgumentNullException("space_name");
@@ -10511,7 +10511,8 @@ namespace Torque.Cli.Api
         /// Tag scope ('account', 'space', 'blueprint' or 'runtime')
         /// </summary>
         [Newtonsoft.Json.JsonProperty("scope", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TagScope Scope { get; set; }
+        public string Scope { get; set; }
+        // public TagScope Scope { get; set; }
 
         /// <summary>
         /// Tag possible values
@@ -10530,8 +10531,8 @@ namespace Torque.Cli.Api
         /// Tag type ('system', 'user_defined', 'override' or 'pre_defined')
         /// </summary>
         [Newtonsoft.Json.JsonProperty("tag_type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TagType Tag_type { get; set; }
-
+        public string Tag_type { get; set; }
+        // public TagType Tag_type { get; set; }
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
