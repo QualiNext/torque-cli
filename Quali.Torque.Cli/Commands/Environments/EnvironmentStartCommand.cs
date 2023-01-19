@@ -5,16 +5,10 @@ using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Environments;
 
-internal class EnvironmentStartCommand : AsyncCommand<EnvironmentStartCommandSettings>
+public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartCommandSettings>
 {
-    private readonly IClientManager _clientManager;
-    private readonly IConsoleManager _consoleManager;
-
-    public EnvironmentStartCommand(IClientManager clientManager, IConsoleManager consoleManager)
-    {
-        _clientManager = clientManager;
-        _consoleManager = consoleManager;
-    }
+    public EnvironmentStartCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
+        consoleManager) { }
 
     private static string GenerateEnvironmentName(string blueprintName)
     {

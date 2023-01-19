@@ -3,17 +3,11 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Environments;
 
-public class EnvironmentEndCommand: AsyncCommand<EnvironmentEndCommandSettings>
+public class EnvironmentEndCommand: TorqueBaseCommand<EnvironmentEndCommandSettings>
 {
-    private readonly IClientManager _clientManager;
-    private readonly IConsoleManager _consoleManager;
+    public EnvironmentEndCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
+        consoleManager) { }
 
-    public EnvironmentEndCommand(IClientManager clientManager, IConsoleManager consoleManager)
-    {
-        _clientManager = clientManager;
-        _consoleManager = consoleManager;
-    }
-    
     public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentEndCommandSettings settings)
     {
         var user = _clientManager.FetchUserProfile(settings);

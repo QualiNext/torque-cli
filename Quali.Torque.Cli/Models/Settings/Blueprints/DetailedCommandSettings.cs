@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Blueprints;
 
-internal class DetailedCommandSettings: BaseSettings
+public class DetailedCommandSettings: BaseSettings
 {
     [CommandOption("--detail")]
     [Description("Show detailed output in a json format")]

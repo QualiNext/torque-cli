@@ -1,21 +1,12 @@
-using System.Runtime.InteropServices;
-using System.Text.Json;
 using Quali.Torque.Cli.Models.Settings.Environments;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Environments;
 
-internal class EnvironmentGetCommand : AsyncCommand<EnvironmentGetCommandSettings>
+public class EnvironmentGetCommand : TorqueBaseCommand<EnvironmentGetCommandSettings>
 {
-    private readonly IClientManager _clientManager;
-    private readonly IConsoleManager _consoleManager;
-
-    public EnvironmentGetCommand(IClientManager clientManager, IConsoleManager consoleManager)
-    {
-        _clientManager = clientManager;
-        _consoleManager = consoleManager;
-    }
+    public EnvironmentGetCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
+        consoleManager) { }
 
     public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentGetCommandSettings settings)
     {
