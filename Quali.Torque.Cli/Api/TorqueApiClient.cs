@@ -7320,35 +7320,50 @@ namespace Torque.Cli.Api
         }
 
         /// <summary>
-        /// Delete cost collection target
+        /// Extend environment
         /// </summary>
         /// <remarks>
-        /// Delete Cost Collection Target .
+        /// Extends the duration of a running environment
         /// </remarks>
+        /// <param name="space_name">Name of the space containing the environment</param>
+        /// <param name="environment_id">EnvironmentId ID</param>
+        /// <param name="value">New scheduled end time in ISO 8601 format. For example, 2021-10-06T08:27:05.215Z.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> CosttargetsDELETEAsync(string name)
+        public virtual System.Threading.Tasks.Task ExtendEnvironment(string space_name, string environment_id, System.DateTimeOffset? value)
         {
-            return CosttargetsDELETEAsync(name, System.Threading.CancellationToken.None);
+            return ExtendEnvironment(space_name, environment_id, value, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Delete cost collection target
+        /// Extend environment
         /// </summary>
         /// <remarks>
-        /// Delete Cost Collection Target .
+        /// Extends the duration of a running environment
         /// </remarks>
+        /// <param name="space_name">Name of the space containing the environment</param>
+        /// <param name="environment_id">EnvironmentId ID</param>
+        /// <param name="value">New scheduled end time in ISO 8601 format. For example, 2021-10-06T08:27:05.215Z.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> CosttargetsDELETEAsync(string name, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task ExtendEnvironment(string space_name, string environment_id, System.DateTimeOffset? value, System.Threading.CancellationToken cancellationToken)
         {
-            if (name == null)
-                throw new System.ArgumentNullException("name");
+            if (space_name == null)
+                throw new System.ArgumentNullException("space_name");
+
+            if (environment_id == null)
+                throw new System.ArgumentNullException("environment_id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/settings/costtargets/{name}");
-            urlBuilder_.Replace("{name}", System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/spaces/{space_name}/environments/{environment_id}/scheduled_end_time?");
+            urlBuilder_.Replace("{space_name}", System.Uri.EscapeDataString(ConvertToString(space_name, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{environment_id}", System.Uri.EscapeDataString(ConvertToString(environment_id, System.Globalization.CultureInfo.InvariantCulture)));
+            if (value != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("value") + "=").Append(System.Uri.EscapeDataString(value.Value.ToString("s", System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -7356,100 +7371,7 @@ namespace Torque.Cli.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    request_.Method = new System.Net.Http.HttpMethod("DELETE");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ICloudAccount>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Set cost collection target accessibility
-        /// </summary>
-        /// <remarks>
-        /// Set Cost Collection Target accessibility .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> AccessibilityAsync(string name, SetCostCollectionTargetAccessibility body)
-        {
-            return AccessibilityAsync(name, body, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Set cost collection target accessibility
-        /// </summary>
-        /// <remarks>
-        /// Set Cost Collection Target accessibility .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> AccessibilityAsync(string name, SetCostCollectionTargetAccessibility body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (name == null)
-                throw new System.ArgumentNullException("name");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/settings/costtargets/{name}/accessibility");
-            urlBuilder_.Replace("{name}", System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)));
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
@@ -7474,292 +7396,42 @@ namespace Torque.Cli.Api
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ICloudAccount>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            return;
+                        }
+
+                        if (status_ == 404)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            throw new ApiException<ErrorResponse>("Space or environment not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
+                        if (status_ == 424)
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Validate connectivity of Cost Collection Target
-        /// </summary>
-        /// <remarks>
-        /// Validate Cost Collection Target .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> ValidateAsync(string name)
-        {
-            return ValidateAsync(name, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Validate connectivity of Cost Collection Target
-        /// </summary>
-        /// <remarks>
-        /// Validate Cost Collection Target .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> ValidateAsync(string name, System.Threading.CancellationToken cancellationToken)
-        {
-            if (name == null)
-                throw new System.ArgumentNullException("name");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/settings/costtargets/{name}/validate");
-            urlBuilder_.Replace("{name}", System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)));
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ICloudAccount>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<ErrorResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            throw new ApiException<ErrorResponse>("Cloud not accessible", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
+                        if (status_ == 400)
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Update AWS cost collection target
-        /// </summary>
-        /// <remarks>
-        /// Update AWS Cost Collection Target .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> AwsAllAsync(string name, UpdateAwsCostCollectionTarget body)
-        {
-            return AwsAllAsync(name, body, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Update AWS cost collection target
-        /// </summary>
-        /// <remarks>
-        /// Update AWS Cost Collection Target .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> AwsAllAsync(string name, UpdateAwsCostCollectionTarget body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (name == null)
-                throw new System.ArgumentNullException("name");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/settings/costtargets/aws/{name}");
-            urlBuilder_.Replace("{name}", System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)));
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("PUT");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ICloudAccount>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Operation failed", status_, responseText_, headers_, null);
                         }
                         else
+                        if (status_ == 422)
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Update Azure cost collection target
-        /// </summary>
-        /// <remarks>
-        /// Update Azure Cost Collection Target .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> AzureAsync(string name, UpdateAzureCostCollectionTarget body)
-        {
-            return AzureAsync(name, body, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Update Azure cost collection target
-        /// </summary>
-        /// <remarks>
-        /// Update Azure Cost Collection Target .
-        /// </remarks>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ICloudAccount>> AzureAsync(string name, UpdateAzureCostCollectionTarget body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (name == null)
-                throw new System.ArgumentNullException("name");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/settings/costtargets/azure/{name}");
-            urlBuilder_.Replace("{name}", System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)));
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("PUT");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ICloudAccount>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("\"value\" (end time) is empty, not UTC, or time already passed", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -10357,6 +10029,8 @@ namespace Torque.Cli.Api
         [Newtonsoft.Json.JsonProperty("kind", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Kind { get; set; }
 
+	[Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Time { get; set; }
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]

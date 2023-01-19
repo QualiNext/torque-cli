@@ -73,6 +73,9 @@ public class Program
                 environment.AddCommand<EnvironmentListCommand>("list")
                     .WithDescription("List Torque Environment")
                     .WithExample(new []{"env", "list", "--show-ended"});
+                environment.AddCommand<EnvironmentExtendCommand>("extend")
+                    .WithDescription("Extend Torque Environment")
+                    .WithExample(new []{"env", "extend", "qwdj4jr9smf", "--duration", "120"});
             });
         });
  
