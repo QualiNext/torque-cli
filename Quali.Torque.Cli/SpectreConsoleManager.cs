@@ -170,7 +170,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
                         }
 
                         AnsiConsole.MarkupLine(
-                            $"[red]Environment failed to start. Current status [bold]{status}[/]");
+                            $"[red]Environment failed to start. Current status is [bold]{status}[/][/]");
                         return false;
                     }
 

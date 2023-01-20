@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Quali.Torque.Cli.Models.Settings.Blueprints;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
@@ -47,4 +48,22 @@ public class EnvironmentStartCommandSettings: DetailedCommandSettings
                  "Default timeout is 30 minutes." +
                  "The default timeout can be changed using the 'timeout' flag.")]
     public bool WaitActive { get; set; }
+    
+    public override ValidationResult Validate()
+    {
+        var errors = new List<string>();
+        
+        if (Branch is null && CommitId is not null)
+            errors.Add("Since commit is specified, branch is required!");
+        
+        if (Timeout < 0)
+            errors.Add("Timeout must be positive!");
+        
+        if (Duration < 0)
+            errors.Add("Duration must be positive!");
+
+        return errors.Count > 0
+            ? ValidationResult.Error(string.Join(Environment.NewLine, errors))
+            : ValidationResult.Success();
+    }
 }

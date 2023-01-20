@@ -23,11 +23,16 @@ public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartCommand
 
         var createEnvRequest = new CreateSandboxRequest()
         {
-            Blueprint_name = settings.BlueprintName,
             Inputs = settings.Inputs,
-            Repository_name = settings.RepositoryName,
             Environment_name = settings.Name ?? GenerateEnvironmentName(settings.BlueprintName),
-            Duration = $"PT{settings.Duration}M"
+            Duration = $"PT{settings.Duration}M",
+            Source = new BlueprintSourceRequest
+            {
+                Blueprint_name = settings.BlueprintName,
+                Repository_name = settings.RepositoryName,
+                Branch = settings.Branch,
+                Commit = settings.CommitId
+            }
         };
 
         try
