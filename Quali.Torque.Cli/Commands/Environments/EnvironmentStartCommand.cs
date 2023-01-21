@@ -16,13 +16,6 @@ public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartCommand
         return $@"{blueprintName}-{suffix}";
     }
 
-    public static async Task<EnvironmentResponse> GetEnvironmentDetails(TorqueApiClient client, string envId,
-        string space)
-    {
-        var envDetails = await client.EnvironmentsGETAsync(space, envId);
-        return envDetails;
-    }
-
     public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentStartCommandSettings settings)
     {
         var user = _clientManager.FetchUserProfile(settings);

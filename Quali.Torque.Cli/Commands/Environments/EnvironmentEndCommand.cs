@@ -14,7 +14,7 @@ public class EnvironmentEndCommand: TorqueBaseCommand<EnvironmentEndCommandSetti
         try
         {
             await _clientManager.GetClient(user).EnvironmentsDELETEAsync(user.Space, settings.EnvironmentId);
-            _consoleManager.WriteEnvironmentEnded(settings.EnvironmentId);
+            _consoleManager.WriteSuccessMessage($"Request to end environment {settings.EnvironmentId} has been sent");
             return 0;
         }
         catch (Exception e)

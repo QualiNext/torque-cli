@@ -19,7 +19,7 @@ public interface IConsoleManager
     T ReadUserInput<T>(string message, bool optional = false, bool masked = false);
     void WriteEnvironmentCreated(string envId, string envUrl);
     Task WaitEnvironment(EnvironmentWaiterData data);
-    void WriteEnvironmentEnded(string envId);
+    void WriteSuccessMessage(string message);
     void WriteEnvironmentDetails(EnvironmentDetailsResponse environment);
     void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList);
 }
@@ -196,9 +196,9 @@ public sealed class SpectreConsoleManager : IConsoleManager
             });
     }
 
-    public void WriteEnvironmentEnded(string envId)
+    public void WriteSuccessMessage(string message)
     {
-        AnsiConsole.MarkupLine($"[blue]Request to end environment [bold]{envId}[/] has been sent[/]");
+        AnsiConsole.MarkupLine($"[green]{message}[/]");
     }
 
     public void WriteEnvironmentDetails(EnvironmentDetailsResponse environment)
