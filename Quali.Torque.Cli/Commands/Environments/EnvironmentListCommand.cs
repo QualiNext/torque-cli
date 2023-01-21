@@ -15,8 +15,10 @@ public class EnvironmentListCommand: TorqueBaseCommand<EnvironmentListCommandSet
             var user = _clientManager.FetchUserProfile(settings);
             var torqueClient = _clientManager.GetClient(user);
 
+            var filter = settings.Filter == "auto" ? "automation" : settings.Filter;
+
             var envList =
-                await torqueClient.EnvironmentsAllAsync(user.Space, null, null, null, !settings.ShowEnded,
+                await torqueClient.EnvironmentsAllAsync(user.Space, filter, null, null, !settings.ShowEnded,
                     settings.Count);
 
             if (envList.Count > 0)
