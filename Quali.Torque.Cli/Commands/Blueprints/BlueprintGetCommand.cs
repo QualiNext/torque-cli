@@ -6,7 +6,9 @@ namespace Quali.Torque.Cli.Commands.Blueprints;
 public class BlueprintGetCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
 {
     public BlueprintGetCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
-        consoleManager) {}
+        consoleManager)
+    {
+    }
 
     public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
     {
@@ -26,7 +28,7 @@ public class BlueprintGetCommand : TorqueBaseCommand<BlueprintGetCommandSettings
             {
                 _consoleManager.WriteBlueprintDetails(blueprintDetails);
             }
-                
+
             return 0;
         }
         catch (Exception ex)

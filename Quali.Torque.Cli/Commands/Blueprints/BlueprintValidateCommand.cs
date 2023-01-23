@@ -8,7 +8,9 @@ namespace Quali.Torque.Cli.Commands.Blueprints;
 public class BlueprintValidateCommand : TorqueBaseCommand<BlueprintValidateCommandSettings>
 {
     public BlueprintValidateCommand(IClientManager clientManager,
-        IConsoleManager consoleManager) : base(clientManager, consoleManager) { }
+        IConsoleManager consoleManager) : base(clientManager, consoleManager)
+    {
+    }
 
     public override async Task<int> ExecuteAsync(CommandContext context, BlueprintValidateCommandSettings settings)
     {

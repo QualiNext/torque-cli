@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Quali.Torque.Cli.Commands.Blueprints;
 using Quali.Torque.Cli.Commands.Config;
@@ -57,6 +57,12 @@ public class Program
 
                 blueprint.AddCommand<BlueprintValidateCommand>("validate")
                     .WithDescription("Validate blueprint");
+                
+                blueprint.AddCommand<BlueprintPublishCommand>("publish")
+                    .WithDescription("Publish blueprint to catalog");
+                
+                blueprint.AddCommand<BlueprintUnpublishCommand>("unpublish")
+                    .WithDescription("Remove blueprint from catalog");
             });
             config.AddBranch("env", environment =>
             {
@@ -64,15 +70,19 @@ public class Program
                 environment.AddCommand<EnvironmentStartCommand>("start")
                     .WithDescription("Start Environment")
                     .WithExample(new[] {"env", "start", "demo", "--duration=100", "--name=MyDemoEnv"});
+                
                 environment.AddCommand<EnvironmentGetCommand>("get")
                     .WithDescription("Get Environment Details")
                     .WithExample(new[] {"env", "get"});
+                
                 environment.AddCommand<EnvironmentEndCommand>("end")
                     .WithDescription("End Torque Environment")
                     .WithExample(new []{"env", "end", "qwdj4jr9smf"});
+                
                 environment.AddCommand<EnvironmentListCommand>("list")
                     .WithDescription("List Torque Environment")
                     .WithExample(new []{"env", "list", "--show-ended"});
+                
                 environment.AddCommand<EnvironmentExtendCommand>("extend")
                     .WithDescription("Extend Torque Environment")
                     .WithExample(new []{"env", "extend", "qwdj4jr9smf", "--duration", "120"});
