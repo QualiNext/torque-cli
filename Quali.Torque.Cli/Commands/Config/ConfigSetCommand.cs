@@ -3,14 +3,14 @@ using Quali.Torque.Cli.Models.Settings.Base;
 using Quali.Torque.Cli.Utils;
 using Spectre.Console.Cli;
 
-namespace Quali.Torque.Cli.Commands.Configure;
+namespace Quali.Torque.Cli.Commands.Config;
 
-public class ConfigureSetCommand: Command<BaseSettings>
+public class ConfigSetCommand: Command<BaseSettings>
 {
     private readonly IConsoleManager _consoleManager;
     private readonly IUserProfilesManager _profilesManager;
     
-    public ConfigureSetCommand( IConsoleManager consoleManager, IUserProfilesManager profilesManager)
+    public ConfigSetCommand( IConsoleManager consoleManager, IUserProfilesManager profilesManager)
     {
         _consoleManager = consoleManager;
         _profilesManager = profilesManager;
