@@ -1,7 +1,7 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Quali.Torque.Cli.Commands.Blueprints;
-using Quali.Torque.Cli.Commands.Configure;
+using Quali.Torque.Cli.Commands.Config;
 using Quali.Torque.Cli.Commands.Environments;
 using Quali.Torque.Cli.Utils;
 using Spectre.Console.Cli;
@@ -34,14 +34,13 @@ public class Program
         {
             config.SetApplicationName("torque");
             config.ValidateExamples();
-            config.AddBranch("configure", configure =>
+            config.AddBranch("config", configure =>
             {
                 configure.SetDescription("List, Add and Modify user profiles");
-                configure.AddCommand<ConfigureListCommand>("list")
+                configure.AddCommand<ConfigListCommand>("list")
                     .WithDescription("List all profiles")
-                    .WithExample(new[] {"configure", "list"});
-                
-                configure.AddCommand<ConfigureSetCommand>("set")
+                    .WithExample(new[] {"config", "list"});
+                configure.AddCommand<ConfigSetCommand>("set")
                     .WithDescription("Add or update torque user profile");
             });
             config.AddBranch("bp", blueprint =>
