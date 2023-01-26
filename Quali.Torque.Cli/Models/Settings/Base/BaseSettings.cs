@@ -3,21 +3,12 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Base;
 
-public class BaseSettings : CommandSettings
+public class BaseSettings: CommandSettings
 {
-    [CommandOption("-s|--space")]
-    [Description("The space name")]
-    public string Space { get; set; }
-
     [CommandOption("-t|--token")]
     [Description("The user long token")]
     public string Token { get; set; }
     
-    [CommandOption("-p|--profile")]
-    [Description("The user profile name")]
-    public string Profile { get; set; }
-    
-    [CommandOption("-r|--repo")]
-    [Description("The repository name to use with command")]
-    public string RepositoryName { get; set; }
+    [CommandOption("--base-url <URL>", IsHidden = true)]
+    public string BaseUrl { get; set; }
 }

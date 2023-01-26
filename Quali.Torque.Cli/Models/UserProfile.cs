@@ -12,4 +12,6 @@ public class UserProfile
     public string Space { get; set; }
     [JsonProperty]
     public string RepositoryName { get; set; }
+    [JsonProperty]
+    public string BaseUrl { get; set; }
 }

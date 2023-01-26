@@ -5,7 +5,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Config;
 
-public class ConfigSetCommand: Command<BaseSettings>
+public class ConfigSetCommand: Command<UserContextSettings>
 {
     private readonly IConsoleManager _consoleManager;
     private readonly IUserProfilesManager _profilesManager;
@@ -16,7 +16,7 @@ public class ConfigSetCommand: Command<BaseSettings>
         _profilesManager = profilesManager;
     }
 
-    public override int Execute(CommandContext context, BaseSettings settings)
+    public override int Execute(CommandContext context, UserContextSettings settings)
     {
         var newProfile = new UserProfile();
         try
