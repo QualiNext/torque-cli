@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Quali.Torque.Cli.Commands.Blueprints;
 using Quali.Torque.Cli.Commands.Config;
 using Quali.Torque.Cli.Commands.Environments;
+using Quali.Torque.Cli.Commands.Spaces;
 using Quali.Torque.Cli.Utils;
 using Spectre.Console.Cli;
 
@@ -86,6 +87,23 @@ public class Program
                 environment.AddCommand<EnvironmentExtendCommand>("extend")
                     .WithDescription("Extend Torque Environment")
                     .WithExample(new []{"env", "extend", "qwdj4jr9smf", "--duration", "120"});
+            });
+            
+            config.AddBranch("space", space =>
+            {
+                space.SetDescription("Create, delete spaces, connect repo to space.");
+
+                space.AddCommand<SpaceCreateCommand>("create")
+                    .WithDescription("Create space")
+                    .WithExample(new[] {"space", "create", "demo"});
+
+                space.AddCommand<SpaceDeleteCommand>("create")
+                    .WithDescription("Delete space")
+                    .WithExample(new[] {"space", "delete", "demo"});
+
+                space.AddCommand<SpaceAddRepoCommand>("connect")
+                    .WithDescription("Connect repo to space")
+                    .WithExample(new[] {"space", "connect", "myRepo"});
             });
         });
  

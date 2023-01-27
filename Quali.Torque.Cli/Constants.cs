@@ -18,6 +18,11 @@ public static class Constants
 
     public static string SuccessStatus = "Active";
 
-    public static string[] EnvFinalStatuses =
+    public static readonly string[] EnvFinalStatuses =
         {"Active", "Active With Error", "Terminating Failed", "Ended", "Force Ended", "Ended With Error"};
+
+    public static string[] GitProviders =
+    {
+        "github", "bitbucket", "githubEnterprise", "gitLab", "gitLabEnterprise", "bitbucketServer", "Azure", "AzureEnterprise"
+    };
 }
