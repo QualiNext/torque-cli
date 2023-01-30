@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Blueprints;
 
-public class BlueprintGetUserContextSettings: DetailedUserContextSettings
+public class BlueprintGetCommandSettings: DetailedUserContextSettings
 {
     [CommandArgument(0, "<BLUEPRINT-NAME>")]
     [Description("The blueprint name to show")]

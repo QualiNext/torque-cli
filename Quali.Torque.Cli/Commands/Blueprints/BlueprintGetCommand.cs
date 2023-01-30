@@ -3,14 +3,14 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintGetCommand : TorqueBaseCommand<BlueprintGetUserContextSettings>
+public class BlueprintGetCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
 {
     public BlueprintGetCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
         consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetUserContextSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
     {
         try
         {
