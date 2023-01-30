@@ -16,6 +16,15 @@ public class UserContextSettings : BaseSettings
     [CommandOption("-r|--repo")]
     [Description("The repository name to use with command")]
     public string RepositoryName { get; set; }
+    
+    public static UserContextSettings ConvertToUserContextSettings(BaseSettings baseSettings)
+    {
+        return new UserContextSettings 
+        {
+            Token = baseSettings.Token,
+            BaseUrl = baseSettings.BaseUrl
+        };
+    }
 }
 
 public class DetailedUserContextSettings: UserContextSettings
