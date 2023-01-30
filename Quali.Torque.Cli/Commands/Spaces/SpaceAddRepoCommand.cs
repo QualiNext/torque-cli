@@ -9,7 +9,7 @@ public class SpaceAddRepoCommand: TorqueBaseCommand<SpaceAddRepoCommandSettings>
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, SpaceAddRepoCommandSettings settings)
+    public override Task<int> ExecuteAsync(CommandContext context, SpaceAddRepoCommandSettings settings)
     {
         throw new NotImplementedException();
     }

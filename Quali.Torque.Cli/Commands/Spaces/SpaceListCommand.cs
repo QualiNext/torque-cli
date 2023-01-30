@@ -33,8 +33,6 @@ public class SpaceListCommand: TorqueBaseCommand<DetailedBaseSettings>
             {
                 _consoleManager.WriteEmptyList("No spaces found");
             }
-
-            return 0;
         }
         catch (Exception ex)
         {
