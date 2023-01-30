@@ -97,9 +97,13 @@ public class Program
                     .WithDescription("Create space")
                     .WithExample(new[] {"space", "create", "demo"});
 
-                space.AddCommand<SpaceDeleteCommand>("create")
+                space.AddCommand<SpaceDeleteCommand>("delete")
                     .WithDescription("Delete space")
                     .WithExample(new[] {"space", "delete", "demo"});
+
+                space.AddCommand<SpaceListCommand>("list")
+                    .WithDescription("Show list of spaces")
+                    .WithExample(new[] {"space", "list"});
 
                 // space.AddCommand<SpaceAddRepoCommand>("connect")
                 //     .WithDescription("Connect repo to space")
