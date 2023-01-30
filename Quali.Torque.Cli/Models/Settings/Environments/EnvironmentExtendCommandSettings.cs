@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
 
-public class EnvironmentExtendCommandSettings: BaseSettings
+public class EnvironmentExtendCommandSettings: UserContextSettings
 {
     [CommandArgument(0, "<ENVIRONMENT-ID>")]
     [Description("The environment id to extend")]

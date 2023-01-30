@@ -5,14 +5,14 @@ using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintValidateCommand : TorqueBaseCommand<BlueprintValidateCommandSettings>
+public class BlueprintValidateCommand : TorqueBaseCommand<BlueprintValidateUserContextSettings>
 {
     public BlueprintValidateCommand(IClientManager clientManager,
         IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintValidateCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintValidateUserContextSettings settings)
     {
         try
         {

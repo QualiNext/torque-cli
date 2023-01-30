@@ -5,7 +5,7 @@ using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Environments;
 
-public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartCommandSettings>
+public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartUserContextSettings>
 {
     public EnvironmentStartCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
         consoleManager) { }
@@ -16,7 +16,7 @@ public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartCommand
         return $@"{blueprintName}-{suffix}";
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentStartCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentStartUserContextSettings settings)
     {
         var user = _clientManager.FetchUserProfile(settings);
         var torqueClient = _clientManager.GetClient(user);
