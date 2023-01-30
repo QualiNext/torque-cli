@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
+using Quali.Torque.Cli.Commands.Agents;
 using Quali.Torque.Cli.Commands.Blueprints;
 using Quali.Torque.Cli.Commands.Config;
 using Quali.Torque.Cli.Commands.Environments;
@@ -43,6 +44,20 @@ public class Program
                 configure.AddCommand<ConfigSetCommand>("set")
                     .WithDescription("Add or update torque user profile");
             });
+
+            config.AddBranch("agent", agent =>
+            {
+                agent.SetDescription("List, associate agents");
+
+                agent.AddCommand<AgentsListCommand>("list")
+                    .WithDescription("List agents in Space.")
+                    .WithExample(new[] {"agent", "list", "mySpace"});
+
+                agent.AddCommand<AgentAssociateWithSpaceCommand>("associate")
+                    .WithDescription("Associate Agent with Space")
+                    .WithExample(new[] {"agent", "associate", "myAgent", "mySpace", "--ns", "demo", "--sa", "mySA"});
+            });
+            
             config.AddBranch("bp", blueprint =>
             {
                 blueprint.SetDescription("Get, List, Validate blueprints.");

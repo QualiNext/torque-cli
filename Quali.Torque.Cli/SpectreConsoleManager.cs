@@ -22,6 +22,7 @@ public interface IConsoleManager
     void WriteSuccessMessage(string message);
     void WriteEnvironmentDetails(EnvironmentDetailsResponse environment);
     void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList);
+    void WriteAgentList(ICollection<SpaceComputeServiceResponse> agentsList);
 }
 
 public sealed class SpectreConsoleManager : IConsoleManager
@@ -234,6 +235,22 @@ public sealed class SpectreConsoleManager : IConsoleManager
                 env.Details.Definition.Metadata.Name.EscapeMarkup(),
                 env.Details.Definition.Metadata.Blueprint_name.EscapeMarkup(),
                 env.Details.Computed_status);
+        }
+        AnsiConsole.Write(table);
+    }
+
+    public void WriteAgentList(ICollection<SpaceComputeServiceResponse> agentsList)
+    {
+        var table = new Table
+        {
+            Title = new TableTitle($"Torque agents")
+        };
+        table.AddColumns("Name", "Status");
+        foreach (var agent in agentsList)
+        {
+            table.AddRow(
+                agent.Name,
+                agent.Status ?? "Unknown");
         }
         AnsiConsole.Write(table);
     }

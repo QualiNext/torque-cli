@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Agents;
 
-public class AgentsListCommandSettings: BaseSettings
+public class AgentsListCommandSettings: DetailedBaseSettings
 {
     [CommandArgument(0, "<SPACE-NAME>")]
     [Description("The space name to list agents from")]

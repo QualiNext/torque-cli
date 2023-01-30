@@ -14,25 +14,25 @@ public class AgentsListCommand: TorqueBaseCommand<AgentsListCommandSettings>
     {
         try
         {
-            var user = _clientManager.FetchUserProfile(UserContextSettings.  settings);
+            var user = _clientManager.FetchUserProfile(UserContextSettings.ConvertToUserContextSettings(settings));
             var torqueClient = _clientManager.GetClient(user);
 
-            var blueprintList = await torqueClient.BlueprintsAllAsync(user.Space);
+            var agentsList = await torqueClient.AgentsAllAsync(settings.SpaceName);
 
-            if (blueprintList.Count > 0)
+            if (agentsList.Count > 0)
             {
                 if (settings.Detail)
                 {
-                    _consoleManager.DumpJson(blueprintList);
+                    _consoleManager.DumpJson(agentsList);
                 }
                 else
                 {
-                    _consoleManager.WriteBlueprintList(blueprintList);
+                    _consoleManager.WriteAgentList(agentsList);
                 }
             }
             else
             {
-                _consoleManager.WriteEmptyList("No blueprints found");
+                _consoleManager.WriteEmptyList("No agents found");
             }
         }
         catch (Exception ex)
