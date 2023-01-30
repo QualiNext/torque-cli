@@ -12,3 +12,10 @@ public class BaseSettings: CommandSettings
     [CommandOption("--base-url <URL>", IsHidden = true)]
     public string BaseUrl { get; set; }
 }
+
+public class DetailedBaseSettings: BaseSettings
+{
+    [CommandOption("--detail")]
+    [Description("Show detailed output in a json format")]
+    public bool Detail { get; set; }
+}

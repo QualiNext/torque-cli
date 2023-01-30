@@ -4,14 +4,14 @@ using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintPublishCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
+public class BlueprintPublishCommand : TorqueBaseCommand<BlueprintGetUserContextSettings>
 {
     public BlueprintPublishCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
         consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetUserContextSettings settings)
     {
         try
         {

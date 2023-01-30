@@ -3,12 +3,12 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Environments;
 
-public class EnvironmentListCommand: TorqueBaseCommand<EnvironmentListCommandSettings>
+public class EnvironmentListCommand: TorqueBaseCommand<EnvironmentListUserContextSettings>
 {
     public EnvironmentListCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
         consoleManager) { }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentListCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentListUserContextSettings settings)
     {
         try
         {

@@ -3,13 +3,13 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintUnpublishCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
+public class BlueprintUnpublishCommand : TorqueBaseCommand<BlueprintGetUserContextSettings>
 {
     public BlueprintUnpublishCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetUserContextSettings settings)
     {
         try
         {

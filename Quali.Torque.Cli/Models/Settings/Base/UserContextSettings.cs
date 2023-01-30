@@ -12,8 +12,15 @@ public class UserContextSettings : BaseSettings
     [CommandOption("-p|--profile")]
     [Description("The user profile name")]
     public string Profile { get; set; }
-    
+
     [CommandOption("-r|--repo")]
     [Description("The repository name to use with command")]
     public string RepositoryName { get; set; }
+}
+
+public class DetailedUserContextSettings: UserContextSettings
+{
+    [CommandOption("--detail")]
+    [Description("Show detailed output in a json format")]
+    public bool Detail { get; set; }
 }

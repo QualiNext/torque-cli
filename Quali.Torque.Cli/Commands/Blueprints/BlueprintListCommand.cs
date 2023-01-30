@@ -1,16 +1,17 @@
+using Quali.Torque.Cli.Models.Settings.Base;
 using Quali.Torque.Cli.Models.Settings.Blueprints;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintListCommand : TorqueBaseCommand<DetailedCommandSettings>
+public class BlueprintListCommand : TorqueBaseCommand<DetailedUserContextSettings>
 {
     public BlueprintListCommand(IClientManager clientManager,
         IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, DetailedCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, DetailedUserContextSettings settings)
     {
         try
         {

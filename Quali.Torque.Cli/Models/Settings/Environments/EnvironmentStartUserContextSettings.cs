@@ -1,11 +1,12 @@
 using System.ComponentModel;
+using Quali.Torque.Cli.Models.Settings.Base;
 using Quali.Torque.Cli.Models.Settings.Blueprints;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
 
-public class EnvironmentStartCommandSettings: DetailedCommandSettings
+public class EnvironmentStartUserContextSettings: DetailedUserContextSettings
 {
     [CommandArgument(0, "<BLUEPRINT-NAME>")]
     [Description("The bluerpint name to run an envrironment from")]

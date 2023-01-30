@@ -1,11 +1,12 @@
 using System.ComponentModel;
+using Quali.Torque.Cli.Models.Settings.Base;
 using Quali.Torque.Cli.Models.Settings.Blueprints;
 using Spectre.Console.Cli;
 using ValidationResult = Spectre.Console.ValidationResult;
 
 namespace Quali.Torque.Cli.Models.Settings.Environments;
 
-public class EnvironmentListCommandSettings: DetailedCommandSettings
+public class EnvironmentListUserContextSettings: DetailedUserContextSettings
 {
     [CommandOption("--show-ended")]
     [Description("Show ended environments")]
