@@ -18,9 +18,19 @@ public class Program
 
         services.AddHttpClient<HttpClient>("Default", configure =>
         {
-            // var userAgentHeader = Environment.GetEnvironmentVariable(Constants.UserAgentEnvVarName) ?? "Torque-CLI/1.0.0"; 
-            var version = PackageVersionExtractor.GetVersion();
-            var productValue = new ProductInfoHeaderValue(Constants.UserAgentValue, version);
+            ProductInfoHeaderValue productValue;
+            var userAgentHeader = Environment.GetEnvironmentVariable(Constants.UserAgentEnvVarName);
+            try
+            {
+                var valueParts = UserAgentUtils.ParseCustomUserAgent(userAgentHeader);
+                productValue = new ProductInfoHeaderValue(valueParts[0], valueParts[1]);
+            }
+            catch (Exception e)
+            {
+                // TODO: log error once logging is ready
+                productValue = new ProductInfoHeaderValue(Constants.UserAgentValue, UserAgentUtils.GetCurrentVersion());
+            }
+            
             configure.DefaultRequestHeaders.UserAgent.Add(productValue);
         });
         services.AddSingleton<IUserProfilesManager, UserProfilesManager>();
