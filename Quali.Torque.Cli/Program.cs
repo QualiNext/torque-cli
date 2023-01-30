@@ -101,9 +101,9 @@ public class Program
                     .WithDescription("Delete space")
                     .WithExample(new[] {"space", "delete", "demo"});
 
-                space.AddCommand<SpaceAddRepoCommand>("connect")
-                    .WithDescription("Connect repo to space")
-                    .WithExample(new[] {"space", "connect", "myRepo"});
+                // space.AddCommand<SpaceAddRepoCommand>("connect")
+                //     .WithDescription("Connect repo to space")
+                //     .WithExample(new[] {"space", "connect", "myRepo"});
             });
         });
  
