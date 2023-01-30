@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Quali.Torque.Cli.Models;
 using Spectre.Console;
 using Spectre.Console.Json;
@@ -23,6 +23,7 @@ public interface IConsoleManager
     void WriteEnvironmentDetails(EnvironmentDetailsResponse environment);
     void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList);
     void WriteAgentList(ICollection<SpaceComputeServiceResponse> agentsList);
+    void WriteSpaceList(ICollection<SpaceListItemResponse> spacesList);
 }
 
 public sealed class SpectreConsoleManager : IConsoleManager
@@ -252,6 +253,15 @@ public sealed class SpectreConsoleManager : IConsoleManager
                 agent.Name,
                 agent.Status ?? "Unknown");
         }
+
         AnsiConsole.Write(table);
+    }
+
+    public void WriteSpaceList(ICollection<SpaceListItemResponse> spacesList)
+    {
+        var spaceRows = spacesList.Select(space => new Text(space.Name, new Style(decoration: Decoration.Bold)))
+            .ToList();
+        
+        AnsiConsole.Write(new Rows(spaceRows));
     }
 }
