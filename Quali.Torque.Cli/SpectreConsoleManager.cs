@@ -22,6 +22,7 @@ public interface IConsoleManager
     void WriteSuccessMessage(string message);
     void WriteEnvironmentDetails(EnvironmentDetailsResponse environment);
     void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList);
+    void WriteSpaceList(ICollection<SpaceListItemResponse> spacesList);
 }
 
 public sealed class SpectreConsoleManager : IConsoleManager
@@ -236,5 +237,13 @@ public sealed class SpectreConsoleManager : IConsoleManager
                 env.Details.Computed_status);
         }
         AnsiConsole.Write(table);
+    }
+
+    public void WriteSpaceList(ICollection<SpaceListItemResponse> spacesList)
+    {
+        var spaceRows = spacesList.Select(space => new Text(space.Name, new Style(decoration: Decoration.Bold)))
+            .ToList();
+        
+        AnsiConsole.Write(new Rows(spaceRows));
     }
 }
