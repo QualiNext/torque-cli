@@ -12,5 +12,6 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v3
       with:
-        context: Quali.Torque.Cli
+        context: .
+        file: Quali.Torque.Cli/Dockerfile
         push: false
