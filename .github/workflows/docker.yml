@@ -13,5 +13,5 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: Quali.Torque.Cli/Dockerfile
+        file: ./Quali.Torque.Cli/Dockerfile
         push: false
