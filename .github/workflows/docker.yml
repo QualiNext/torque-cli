@@ -1,0 +1,14 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - 'feature/deployment'
+        
+jobs:
+  build_docker_image:
+    - name: Build Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: false
