@@ -25,7 +25,7 @@ public class Program
                 var valueParts = UserAgentUtils.ParseCustomUserAgent(userAgentHeader);
                 productValue = new ProductInfoHeaderValue(valueParts[0], valueParts[1]);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // TODO: log error once logging is ready
                 productValue = new ProductInfoHeaderValue(Constants.UserAgentValue, UserAgentUtils.GetCurrentVersion());
