@@ -25,3 +25,5 @@ jobs:
         context: .
         file: ./Quali.Torque.Cli/Dockerfile
         push: true
+        tags: |
+          ghcr.io/QualiNext/torque-cli:1.0.0
