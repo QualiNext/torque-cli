@@ -7,7 +7,7 @@
 - Login to github
 - go to account **Settings**
 - Go to **Developer settings**
-- Generate a classic personal access token with permissions to read packages and save it somewhere
+- Generate a classic personal access token with permissions to read/write packages.
 
 ### Install as a dotnet tool
 

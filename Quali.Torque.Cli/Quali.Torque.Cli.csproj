@@ -9,6 +9,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>torque</AssemblyName>
     <RepositoryUrl>https://github.com/QualiNext/torque-cli</RepositoryUrl>
+    <RuntimeIdentifiers>win10-x64;osx.10.12-x64;debian.8-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
