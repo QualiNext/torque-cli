@@ -1,3 +1,5 @@
+name: Publish binaries
+
 on:
   push:
     # TODO: must be on tags only
@@ -17,8 +19,12 @@ jobs:
       - name: Publish
         run: |
           dotnet publish --self-contained -r osx-x64  -c release -o ./osx-x64 -p:PublishSingleFile=true
-          dotnet publish --self-contained -r osx-x64  -c release -o ~/linux-x64 -p:PublishSingleFile=true
-          dotnet publish --self-contained -r osx-x64  -c release -o ~/win-x64 -p:PublishSingleFile=true
+          dotnet publish --self-contained -r osx-x64  -c release -o ./linux-x64 -p:PublishSingleFile=true
+          dotnet publish --self-contained -r osx-x64  -c release -o ./win-x64 -p:PublishSingleFile=true
+          
+          chmod +x ./osx-x64/torque
+          chmod +x ./win-x64/torque
+          chmod +x ./osx-x64/torque
           
       - name: Upload Win Artifact
         uses: actions/upload-artifact@v3
