@@ -24,5 +24,5 @@ torque -h
 export CR_PAT=<GH_TOKEN>
 echo $CR_PAT | docker login ghcr.io -u <GH_USERNAME> --password-stdin
 # run torque
-docker run ghcr.io/qualinext/torque-cli:1.0.0 -h
+docker run -it ghcr.io/qualinext/torque-cli:1.0.0 -h
 ```
