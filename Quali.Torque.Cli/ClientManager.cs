@@ -60,7 +60,7 @@ public class ClientManager : IClientManager
 
         // Since overriding Torque URL is a rear case, we do not store it in a config file but allow reading from user 
         userProfile.BaseUrl = settings.BaseUrl ??
-                              _environmentProvider.GetEnvironmentVariable(Constants.DefaultTorqueUrl) ??
+                              _environmentProvider.GetEnvironmentVariable(Constants.BaseUrlEnvVarName) ??
                               Constants.DefaultTorqueUrl;
 
         return userProfile;

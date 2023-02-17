@@ -28,7 +28,7 @@ public class Program
             catch (Exception e)
             {
                 // TODO: log error once logging is ready
-                productValue = new ProductInfoHeaderValue(Constants.UserAgentValue, UserAgentUtils.GetCurrentVersion());
+                productValue = new ProductInfoHeaderValue(Constants.DefaultUserAgentValue, UserAgentUtils.GetCurrentVersion());
             }
             
             configure.DefaultRequestHeaders.UserAgent.Add(productValue);
