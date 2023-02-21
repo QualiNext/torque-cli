@@ -1,11 +1,10 @@
 using Quali.Torque.Cli.Models;
 using Quali.Torque.Cli.Models.Settings.Environments;
-using Spectre.Console.Cli;
 using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Environments;
 
-public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartUserContextSettings>
+public class EnvironmentStartCommand : TorqueMemberScopedCommand<EnvironmentStartUserContextSettings>
 {
     public EnvironmentStartCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
         consoleManager) { }
@@ -16,12 +15,9 @@ public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartUserCon
         return $@"{blueprintName}-{suffix}";
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, EnvironmentStartUserContextSettings settings)
+    protected override async Task RunTorqueCommandAsync(EnvironmentStartUserContextSettings settings)
     {
-        var user = _clientManager.FetchUserProfile(settings);
-        var torqueClient = _clientManager.GetClient(user);
-
-        var createEnvRequest = new CreateSandboxRequest()
+        var createEnvRequest = new CreateSandboxRequest
         {
             Inputs = settings.Inputs,
             Environment_name = settings.Name ?? GenerateEnvironmentName(settings.BlueprintName),
@@ -34,35 +30,24 @@ public class EnvironmentStartCommand : TorqueBaseCommand<EnvironmentStartUserCon
                 Commit = settings.CommitId
             }
         };
+        
+        var envResponse = await Client.EnvironmentsPOSTAsync(User.Space, createEnvRequest);
 
-        try
+        if (settings.WaitActive)
         {
-            var envResponse = await torqueClient.EnvironmentsPOSTAsync(user.Space, createEnvRequest);
-
-            if (settings.WaitActive)
+            await ConsoleManager.WaitEnvironment(new EnvironmentWaiterData
             {
-                await _consoleManager.WaitEnvironment(new EnvironmentWaiterData()
-                {
-                    Timeout = settings.Timeout,
-                    Space = user.Space,
-                    Client = torqueClient,
-                    EnvironmentId = envResponse.Id
-                });
-            }
-
-            if (settings.Detail)
-                _consoleManager.DumpJson(envResponse);
-            else
-                _consoleManager.WriteEnvironmentCreated(envResponse.Id,
-                    $"{torqueClient.BaseUrl}/{user.Space}/sandboxes/{envResponse.Id}/devops");
-            
-        }
-        catch (Exception ex)
-        {
-            _consoleManager.WriteError(ex);
-            return 1;
+                Timeout = settings.Timeout,
+                Space = User.Space,
+                Client = Client,
+                EnvironmentId = envResponse.Id
+            });
         }
 
-        return 0;
+        if (settings.Detail)
+            ConsoleManager.DumpJson(envResponse);
+        else
+            ConsoleManager.WriteEnvironmentCreated(envResponse.Id,
+                $"{Client.BaseUrl}/{User.Space}/sandboxes/{envResponse.Id}/devops");
     }
 }

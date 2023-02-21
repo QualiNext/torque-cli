@@ -14,7 +14,8 @@ public interface IConsoleManager
     void WriteBlueprintsErrors(BlueprintValidationResponse result);
     void WriteEmptyList(string title);
     void WriteProfilesList(List<UserProfile> userProfiles);
-    void WriteError(Exception ex);
+    void WriteException(Exception ex);
+    void WriteError(string errorMessage);
     void DumpJson(object obj);
     T ReadUserInput<T>(string message, bool optional = false, bool masked = false);
     void WriteEnvironmentCreated(string envId, string envUrl);
@@ -116,9 +117,15 @@ public sealed class SpectreConsoleManager : IConsoleManager
         AnsiConsole.Write(table);
     }
 
-    public void WriteError(Exception ex)
+    public void WriteException(Exception ex)
     {
         AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
+    }
+
+    public void WriteError(string errorMessage)
+    {
+        AnsiConsole.Write(new Text($"Error: {errorMessage}", new Style(Color.Red, decoration:Decoration.Bold)));
+        AnsiConsole.WriteLine();
     }
 
     public void DumpJson(object obj)

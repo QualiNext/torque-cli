@@ -1,45 +1,30 @@
 using Quali.Torque.Cli.Models.Settings.Base;
-using Spectre.Console.Cli;
-
 namespace Quali.Torque.Cli.Commands.Spaces;
 
-public class SpaceListCommand: TorqueBaseCommand<DetailedBaseSettings>
+public class SpaceListCommand: TorqueAdminScopedCommand<DetailedBaseSettings>
 {
     public SpaceListCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, DetailedBaseSettings settings)
+    protected override async Task RunTorqueCommandAsync(DetailedBaseSettings settings)
     {
-        try
+        var spacesList = await Client.SpacesAllAsync();
+
+        if (spacesList.Count > 0)
         {
-            var user = _clientManager.FetchUserProfile(UserContextSettings.ConvertToUserContextSettings(settings));
-            var torqueClient = _clientManager.GetClient(user);
-
-            var spacesList = await torqueClient.SpacesAllAsync();
-
-            if (spacesList.Count > 0)
+            if (settings.Detail)
             {
-                if (settings.Detail)
-                {
-                    _consoleManager.DumpJson(spacesList);
-                }
-                else
-                {
-                    _consoleManager.WriteSpaceList(spacesList);
-                }
+                ConsoleManager.DumpJson(spacesList);
             }
             else
             {
-                _consoleManager.WriteEmptyList("No spaces found");
+                ConsoleManager.WriteSpaceList(spacesList);
             }
         }
-        catch (Exception ex)
+        else
         {
-            _consoleManager.WriteError(ex);
-            return 1;
+            ConsoleManager.WriteEmptyList("No spaces found");
         }
-
-        return 0;
     }
 }
