@@ -3,13 +3,13 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Spaces;
 
-public class SpaceAddRepoCommand: TorqueBaseCommand<SpaceAddRepoCommandSettings>
+public class SpaceAddRepoCommand: TorqueAdminScopedCommand<SpaceAddRepoCommandSettings>
 {
     public SpaceAddRepoCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override Task<int> ExecuteAsync(CommandContext context, SpaceAddRepoCommandSettings settings)
+    protected override async Task RunTorqueCommandAsync(SpaceAddRepoCommandSettings settings)
     {
         throw new NotImplementedException();
     }

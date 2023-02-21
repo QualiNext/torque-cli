@@ -1,48 +1,32 @@
 using Quali.Torque.Cli.Models.Settings.Base;
-using Quali.Torque.Cli.Models.Settings.Blueprints;
-using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintListCommand : TorqueBaseCommand<DetailedUserContextSettings>
+public class BlueprintListCommand : TorqueMemberScopedCommand<DetailedUserContextSettings>
 {
     public BlueprintListCommand(IClientManager clientManager,
         IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, DetailedUserContextSettings settings)
+    protected override async Task RunTorqueCommandAsync(DetailedUserContextSettings settings)
     {
-        try
+        var blueprintList = await Client.BlueprintsAllAsync(User.Space);
+
+        if (blueprintList.Count > 0)
         {
-            var user = _clientManager.FetchUserProfile(settings);
-            var torqueClient = _clientManager.GetClient(user);
-
-            var blueprintList = await torqueClient.BlueprintsAllAsync(user.Space);
-
-            if (blueprintList.Count > 0)
+            if (settings.Detail)
             {
-                if (settings.Detail)
-                {
-                    _consoleManager.DumpJson(blueprintList);
-                }
-                else
-                {
-                    _consoleManager.WriteBlueprintList(blueprintList);
-                }
+                ConsoleManager.DumpJson(blueprintList);
             }
             else
             {
-                _consoleManager.WriteEmptyList("No blueprints found");
+                ConsoleManager.WriteBlueprintList(blueprintList);
             }
         }
-        catch (Exception ex)
+        else
         {
-            _consoleManager.WriteError(ex);
-            return 1;
+            ConsoleManager.WriteEmptyList("No blueprints found");
         }
-
-
-        return 0;
     }
 }

@@ -76,7 +76,7 @@ public class ConfigSetCommand: Command<UserContextSettings>
         }
         catch (Exception ex)
         {
-            _consoleManager.WriteError(ex);
+            _consoleManager.WriteException(ex);
             return 1;
         }
     }

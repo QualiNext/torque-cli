@@ -3,28 +3,15 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintUnpublishCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
+public class  BlueprintUnpublishCommand : TorqueMemberScopedCommand<BlueprintGetCommandSettings>
 {
     public BlueprintUnpublishCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager, consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
+    protected override async Task RunTorqueCommandAsync(BlueprintGetCommandSettings settings)
     {
-        try
-        {
-            var user = _clientManager.FetchUserProfile(settings);
-            var torqueClient = _clientManager.GetClient(user);
-
-            await torqueClient.CatalogDELETEAsync(user.Space, user.RepositoryName, settings.BlueprintName);
-            _consoleManager.WriteSuccessMessage($"Blueprint '{settings.BlueprintName}' has been removed from the catalog");
-        }
-        catch (Exception ex)
-        {
-            _consoleManager.WriteError(ex);
-            return 1;
-        }
-
-        return 0;
+        await Client.CatalogDELETEAsync(User.Space, User.RepositoryName, settings.BlueprintName);
+        ConsoleManager.WriteSuccessMessage($"Blueprint '{settings.BlueprintName}' has been removed from the catalog");
     }
 }
