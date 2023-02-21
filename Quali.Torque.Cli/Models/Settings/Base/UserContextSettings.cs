@@ -9,10 +9,6 @@ public class UserContextSettings : BaseSettings
     [Description("The space name")]
     public string Space { get; set; }
 
-    [CommandOption("-p|--profile")]
-    [Description("The user profile name")]
-    public string Profile { get; set; }
-
     [CommandOption("-r|--repo")]
     [Description("The repository name to use with command")]
     public string RepositoryName { get; set; }
@@ -22,7 +18,8 @@ public class UserContextSettings : BaseSettings
         return new UserContextSettings 
         {
             Token = baseSettings.Token,
-            BaseUrl = baseSettings.BaseUrl
+            BaseUrl = baseSettings.BaseUrl,
+            Profile = baseSettings.Profile
         };
     }
 }
