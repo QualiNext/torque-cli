@@ -4,14 +4,14 @@ namespace Quali.Torque.Cli.Models;
 
 public class UserProfile
 {
-    [JsonProperty]
+    [JsonProperty("name")]
     public string Name { get; set; }
-    [JsonProperty]
+    [JsonProperty("token")]
     public string Token { get; set; }
-    [JsonProperty]
+    [JsonProperty("space")]
     public string Space { get; set; }
-    [JsonProperty]
+    [JsonProperty("repository")]
     public string RepositoryName { get; set; }
-    [JsonProperty]
+    [JsonProperty("baseUrl")]
     public string BaseUrl { get; set; }
 }

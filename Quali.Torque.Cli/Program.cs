@@ -35,6 +35,7 @@ public class Program
         });
         services.AddSingleton<IUserProfilesManager, UserProfilesManager>();
         services.AddSingleton<IEnvironmentProvider, EnvironmentProvider>();
+        services.AddSingleton<ITorqueConfigurationProvider, TorqueYamlConfigurationProvider>();
 
         services.AddSingleton<IConsoleManager, SpectreConsoleManager>(); 
         services.AddSingleton<IClientManager, ClientManager>();

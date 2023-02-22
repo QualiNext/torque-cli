@@ -5,15 +5,10 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Config;
 
-public class ConfigSetCommand: Command<UserContextSettings>
+public class ConfigSetCommand: ConfigBaseCommand<UserContextSettings>
 {
-    private readonly IConsoleManager _consoleManager;
-    private readonly IUserProfilesManager _profilesManager;
-    
-    public ConfigSetCommand( IConsoleManager consoleManager, IUserProfilesManager profilesManager)
+    public ConfigSetCommand(IConsoleManager consoleManager, IUserProfilesManager profilesManager) : base(consoleManager, profilesManager)
     {
-        _consoleManager = consoleManager;
-        _profilesManager = profilesManager;
     }
 
     public override int Execute(CommandContext context, UserContextSettings settings)
@@ -23,11 +18,24 @@ public class ConfigSetCommand: Command<UserContextSettings>
         {
             // read profile name
             var profileName = settings.Profile 
-                              ?? _consoleManager.ReadUserInput<string>("Profile Name [default]: ", true);
+                              ?? ConsoleManager.ReadUserInput<string>("Profile Name [default]: ", true);
             profileName = string.IsNullOrEmpty(profileName) ? "default" : profileName;
             newProfile.Name = profileName;
 
-            var currentProfile = _profilesManager.ReadUserProfile(profileName);
+            UserProfile currentProfile;
+
+            try
+            {
+                currentProfile = ProfilesManager.ReadUserProfile(profileName);
+            }
+            catch (ProfileNotFoundException)
+            {
+                currentProfile = new UserProfile();
+            }
+            catch (DuplicatedProfilesFoundException e)
+            {
+                throw new Exception("Profiles configuration might be broken. Details: " + e.Message);
+            }
             
             // read token
             if (!string.IsNullOrEmpty(settings.Token))
@@ -38,7 +46,7 @@ public class ConfigSetCommand: Command<UserContextSettings>
             {
                 var isTokenNeeded = string.IsNullOrEmpty(currentProfile.Token);
                 var msg = isTokenNeeded ? "Torque Token: " : $"Torque Token [{currentProfile.Token.MaskToken()}]: ";
-                var token = _consoleManager.ReadUserInput<string>(msg, !isTokenNeeded, true);
+                var token = ConsoleManager.ReadUserInput<string>(msg, !isTokenNeeded, true);
                 newProfile.Token = string.IsNullOrEmpty(token) ? currentProfile.Token : token;
             }
             
@@ -51,7 +59,7 @@ public class ConfigSetCommand: Command<UserContextSettings>
             {
                 var isSpaceNeeded = string.IsNullOrEmpty(currentProfile.Space);
                 var msg = isSpaceNeeded ? "Torque Space: " : $"Torque Space [{currentProfile.Space}]: ";
-                var space = _consoleManager.ReadUserInput<string>(msg, !isSpaceNeeded);
+                var space = ConsoleManager.ReadUserInput<string>(msg, !isSpaceNeeded);
                 newProfile.Space = string.IsNullOrEmpty(space) ? currentProfile.Space : space;
             }
             
@@ -66,17 +74,17 @@ public class ConfigSetCommand: Command<UserContextSettings>
                 var msg = isRepoNeeded
                     ? "Torque Blueprint Repository: "
                     : $"Torque Blueprints Repository [{currentProfile.RepositoryName}]: ";
-                var repo  = _consoleManager.ReadUserInput<string>(msg, !isRepoNeeded); 
+                var repo  = ConsoleManager.ReadUserInput<string>(msg, true); // repo might be always optional for now
                 newProfile.RepositoryName = string.IsNullOrEmpty(repo) ? currentProfile.RepositoryName: repo;
             }
             
-            _profilesManager.WriteUserProfile(newProfile);
+            ProfilesManager.WriteUserProfile(newProfile);
             
             return 0;
         }
         catch (Exception ex)
         {
-            _consoleManager.WriteException(ex);
+            ConsoleManager.WriteException(ex);
             return 1;
         }
     }
