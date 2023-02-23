@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>torque</ToolCommandName>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <AssemblyName>torque</AssemblyName>
+    <AssemblyName>torque-cli</AssemblyName>
+    <Company>Quali</Company>
     <VersionPrefix>2.0.0</VersionPrefix>
   </PropertyGroup>
 
