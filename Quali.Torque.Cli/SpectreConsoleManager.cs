@@ -13,7 +13,7 @@ public interface IConsoleManager
     void WriteBlueprintDetails(BlueprintDetailsResponse blueprintDetails);
     void WriteBlueprintsErrors(BlueprintValidationResponse result);
     void WriteEmptyList(string title);
-    void WriteProfilesList(List<UserProfile> userProfiles);
+    void WriteProfilesList(List<UserProfile> userProfiles, string activeProfile);
     void WriteException(Exception ex);
     void WriteError(string errorMessage);
     void DumpJson(object obj);
@@ -104,15 +104,19 @@ public sealed class SpectreConsoleManager : IConsoleManager
         AnsiConsole.MarkupLine($"[red]{title}[/]");
     }
 
-    public void WriteProfilesList(List<UserProfile> userProfiles)
+    public void WriteProfilesList(List<UserProfile> userProfiles, string activeProfile)
     {
         var table = new Table();
         table.Border(TableBorder.Minimal);
         table.Title = new TableTitle("Torque user profiles");
-        table.AddColumns("Profile Name", "Space", "Repository", "Token");
+
+        var headerNames = new List<string> {"Active", "Profile Name", "Space", "Repository", "Token"};
+        table.AddStyledColumns(headerNames, Color.Blue, Justify.Center);
+
         foreach (var profile in userProfiles)
         {
-            table.AddRow(profile.Name, profile.Space, profile.RepositoryName, profile.Token.MaskToken());
+            var active = profile.Name == activeProfile ? "+" : "";
+            table.AddRow($"[green]{active}[/]", profile.Name, profile.Space, profile.RepositoryName ?? "", profile.Token.MaskToken());
         }
         AnsiConsole.Write(table);
     }

@@ -43,8 +43,9 @@ public class ClientManager : IClientManager
     /// </summary>
     public UserProfile FetchUserProfile(UserContextSettings settings)
     {
-        var profileName = settings.Profile ?? "default";
-        var userProfile = _userProfilesManager.ReadUserProfile(profileName);
+        var userProfile = settings.Profile is null
+            ? _userProfilesManager.ReadActiveUserProfile()
+            : _userProfilesManager.ReadUserProfile(settings.Profile);
 
         userProfile.Space = settings.Space ??
                             _environmentProvider.GetEnvironmentVariable(Constants.TorqueSpace) ?? 
