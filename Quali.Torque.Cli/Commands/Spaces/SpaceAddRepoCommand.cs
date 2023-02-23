@@ -9,7 +9,7 @@ public class SpaceAddRepoCommand: TorqueAdminScopedCommand<SpaceAddRepoCommandSe
     {
     }
 
-    protected override async Task RunTorqueCommandAsync(SpaceAddRepoCommandSettings settings)
+    protected override Task RunTorqueCommandAsync(SpaceAddRepoCommandSettings settings)
     {
         throw new NotImplementedException();
     }

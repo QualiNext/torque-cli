@@ -25,7 +25,7 @@ public class Program
                 var valueParts = UserAgentUtils.ParseCustomUserAgent(userAgentHeader);
                 productValue = new ProductInfoHeaderValue(valueParts[0], valueParts[1]);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // TODO: log error once logging is ready
                 productValue = new ProductInfoHeaderValue(Constants.DefaultUserAgentValue, UserAgentUtils.GetCurrentVersion());
@@ -55,6 +55,12 @@ public class Program
                     .WithExample(new[] {"config", "list"});
                 configure.AddCommand<ConfigSetCommand>("set")
                     .WithDescription("Add or update torque user profile");
+                configure.AddCommand<ConfigRemoveCommand>("remove")
+                    .WithDescription("Remove specified profile")
+                    .WithExample(new[] {"config", "remove", "myprofile"});
+                configure.AddCommand<ConfigSetActiveCommand>("activate")
+                    .WithDescription("Set active profile")
+                    .WithExample(new[] {"config", "activate", "myprofile"});
             });
 
             config.AddBranch("agent", agent =>

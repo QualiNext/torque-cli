@@ -51,9 +51,9 @@ public class UserProfilesManager : IUserProfilesManager
         {
             _torqueConfiguration = _torqueConfigurationProvider.LoadConfiguration(_configPath);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.Write(e);
+            // TODO: log?
             _torqueConfiguration = new TorqueConfiguration
             {
                 ActiveProfile = null,
