@@ -17,4 +17,10 @@ public static class SpectreConsoleTorqueExtensions
 
         return tokenString.Length > 3 ? $"******{tokenString[^4..]}" : "******";
     }
+
+    public static void AddStyledColumns(this Table table, List<string> headers, Color color, Justify align)
+    {
+        table.AddColumns(headers
+            .Select(header => new TableColumn(new Text(header, new Style(color))) {Alignment = align}).ToArray());
+    }
 }

@@ -11,6 +11,10 @@ public class BaseSettings: CommandSettings
     
     [CommandOption("--base-url <URL>", IsHidden = true)]
     public string BaseUrl { get; set; }
+    
+    [CommandOption("-p|--profile")]
+    [Description("The user profile name")]
+    public string Profile { get; set; }
 }
 
 public class DetailedBaseSettings: BaseSettings

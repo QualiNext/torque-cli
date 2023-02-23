@@ -28,13 +28,14 @@ public class Program
             catch (Exception)
             {
                 // TODO: log error once logging is ready
-                productValue = new ProductInfoHeaderValue(Constants.UserAgentValue, UserAgentUtils.GetCurrentVersion());
+                productValue = new ProductInfoHeaderValue(Constants.DefaultUserAgentValue, UserAgentUtils.GetCurrentVersion());
             }
             
             configure.DefaultRequestHeaders.UserAgent.Add(productValue);
         });
         services.AddSingleton<IUserProfilesManager, UserProfilesManager>();
         services.AddSingleton<IEnvironmentProvider, EnvironmentProvider>();
+        services.AddSingleton<ITorqueConfigurationProvider, TorqueYamlConfigurationProvider>();
 
         services.AddSingleton<IConsoleManager, SpectreConsoleManager>(); 
         services.AddSingleton<IClientManager, ClientManager>();
@@ -54,6 +55,12 @@ public class Program
                     .WithExample(new[] {"config", "list"});
                 configure.AddCommand<ConfigSetCommand>("set")
                     .WithDescription("Add or update torque user profile");
+                configure.AddCommand<ConfigRemoveCommand>("remove")
+                    .WithDescription("Remove specified profile")
+                    .WithExample(new[] {"config", "remove", "myprofile"});
+                configure.AddCommand<ConfigSetActiveCommand>("activate")
+                    .WithDescription("Set active profile")
+                    .WithExample(new[] {"config", "activate", "myprofile"});
             });
 
             config.AddBranch("agent", agent =>

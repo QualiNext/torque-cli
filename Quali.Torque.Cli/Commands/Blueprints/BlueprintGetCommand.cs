@@ -1,40 +1,26 @@
 using Quali.Torque.Cli.Models.Settings.Blueprints;
-using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
-public class BlueprintGetCommand : TorqueBaseCommand<BlueprintGetCommandSettings>
+public class BlueprintGetCommand : TorqueMemberScopedCommand<BlueprintGetCommandSettings>
 {
     public BlueprintGetCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
         consoleManager)
     {
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BlueprintGetCommandSettings settings)
+    protected override async Task RunTorqueCommandAsync(BlueprintGetCommandSettings settings)
     {
-        try
+        var blueprintDetails =
+            await Client.CatalogGETAsync(User.Space, settings.BlueprintName, User.RepositoryName);
+
+        if (settings.Detail)
         {
-            var user = _clientManager.FetchUserProfile(settings);
-            var torqueClient = _clientManager.GetClient(user);
-
-            var blueprintDetails =
-                await torqueClient.CatalogGETAsync(user.Space, settings.BlueprintName, user.RepositoryName);
-
-            if (settings.Detail)
-            {
-                _consoleManager.DumpJson(blueprintDetails);
-            }
-            else
-            {
-                _consoleManager.WriteBlueprintDetails(blueprintDetails);
-            }
-
-            return 0;
+            ConsoleManager.DumpJson(blueprintDetails);
         }
-        catch (Exception ex)
+        else
         {
-            _consoleManager.WriteError(ex);
-            return 1;
+            ConsoleManager.WriteBlueprintDetails(blueprintDetails);
         }
     }
 }

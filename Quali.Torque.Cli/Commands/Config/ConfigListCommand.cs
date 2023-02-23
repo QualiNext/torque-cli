@@ -16,7 +16,8 @@ public class ConfigListCommand: Command
     public override int Execute(CommandContext context)
     {
         var profiles = _profilesManager.ListUserProfiles();
-        _consoleManager.WriteProfilesList(profiles);
+        var activeProfileName = _profilesManager.ReadActiveUserProfile().Name;
+        _consoleManager.WriteProfilesList(profiles, activeProfileName);
         return 0;
     }
 }

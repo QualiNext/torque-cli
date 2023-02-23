@@ -43,8 +43,9 @@ public class ClientManager : IClientManager
     /// </summary>
     public UserProfile FetchUserProfile(UserContextSettings settings)
     {
-        var profileName = settings.Profile ?? "default";
-        var userProfile = _userProfilesManager.ReadUserProfile(profileName);
+        var userProfile = settings.Profile is null
+            ? _userProfilesManager.ReadActiveUserProfile()
+            : _userProfilesManager.ReadUserProfile(settings.Profile);
 
         userProfile.Space = settings.Space ??
                             _environmentProvider.GetEnvironmentVariable(Constants.TorqueSpace) ?? 
@@ -60,7 +61,7 @@ public class ClientManager : IClientManager
 
         // Since overriding Torque URL is a rear case, we do not store it in a config file but allow reading from user 
         userProfile.BaseUrl = settings.BaseUrl ??
-                              _environmentProvider.GetEnvironmentVariable(Constants.DefaultTorqueUrl) ??
+                              _environmentProvider.GetEnvironmentVariable(Constants.BaseUrlEnvVarName) ??
                               Constants.DefaultTorqueUrl;
 
         return userProfile;

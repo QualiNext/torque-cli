@@ -5,30 +5,15 @@ using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Spaces;
 
-public class SpaceCreateCommand: TorqueBaseCommand<SpaceCreateCommandSettings>
+public class SpaceCreateCommand: TorqueAdminScopedCommand<SpaceCreateCommandSettings>
 {
     public SpaceCreateCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager, consoleManager)
     { 
     }
-    
-    public override async Task<int> ExecuteAsync(CommandContext context, SpaceCreateCommandSettings settings)
+
+    protected override async Task RunTorqueCommandAsync(SpaceCreateCommandSettings settings)
     {
-        try
-        {
-            var user = _clientManager.FetchUserProfile(UserContextSettings.ConvertToUserContextSettings(settings));
-            var torqueClient = _clientManager.GetClient(user);
-
-            await torqueClient.SpacesPOST2Async(new CreateSpaceRequest {Name = settings.SpaceName});
-            _consoleManager.WriteSuccessMessage($"Space '{settings.SpaceName}' has been created.");
-        }
-        catch (Exception ex)
-        {
-            _consoleManager.WriteError(ex);
-            return 1;
-        }
-
-        return 0;
+        await Client.SpacesPOST2Async(new CreateSpaceRequest {Name = settings.SpaceName});
+        ConsoleManager.WriteSuccessMessage($"Space '{settings.SpaceName}' has been created.");
     }
-
-    
 }
