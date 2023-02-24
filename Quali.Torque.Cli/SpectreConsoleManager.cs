@@ -128,7 +128,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
 
     public void WriteError(string errorMessage)
     {
-        AnsiConsole.Write(new Text($"Error: {errorMessage}", new Style(Color.Red, decoration:Decoration.Bold)));
+        AnsiConsole.Write(new Text(errorMessage, new Style(Color.Red, decoration:Decoration.Bold)));
         AnsiConsole.WriteLine();
     }
 

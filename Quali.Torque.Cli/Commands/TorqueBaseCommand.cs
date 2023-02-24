@@ -32,6 +32,7 @@ public abstract class TorqueBaseCommand<T> : AsyncCommand<T> where T : CommandSe
         }
         catch (ApiException e)
         {
+            ConsoleManager.WriteError("Error: unable to execute a command. Details:");
             var torqueResponse = JsonConvert.DeserializeObject<TorqueApiErrorResponse>(e.Response);
             if (torqueResponse != null)
                 foreach (var error in torqueResponse.Errors)

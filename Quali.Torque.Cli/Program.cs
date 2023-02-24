@@ -47,6 +47,53 @@ public class Program
         {
             config.SetApplicationName("torque");
             config.ValidateExamples();
+           
+            config.AddBranch("blueprint", blueprint =>
+            {
+                blueprint.SetDescription("Get, List, Validate blueprints.");
+                
+                blueprint.AddCommand<BlueprintGetCommand>("get")
+                    .WithDescription("Get blueprint by Name.")
+                    .WithExample(new [] { "bp", "get", "MyBp"});
+
+                blueprint.AddCommand<BlueprintListCommand>("list")
+                    .WithDescription("List blueprints")
+                    .WithExample(new [] { "bp", "list" });
+
+                blueprint.AddCommand<BlueprintValidateCommand>("validate")
+                    .WithDescription("Validate blueprint");
+                
+                blueprint.AddCommand<BlueprintPublishCommand>("publish")
+                    .WithDescription("Publish blueprint to catalog");
+                
+                blueprint.AddCommand<BlueprintUnpublishCommand>("unpublish")
+                    .WithDescription("Remove blueprint from catalog");
+            }).WithAlias("bp");
+            
+            config.AddBranch("environment", environment =>
+            {
+                environment.SetDescription("Start, End, View Torque environments.");
+                environment.AddCommand<EnvironmentStartCommand>("start")
+                    .WithDescription("Start Environment")
+                    .WithExample(new[] {"env", "start", "demo", "--duration=100", "--name=MyDemoEnv"});
+                
+                environment.AddCommand<EnvironmentGetCommand>("get")
+                    .WithDescription("Get Environment Details")
+                    .WithExample(new[] {"env", "get"});
+                
+                environment.AddCommand<EnvironmentEndCommand>("end")
+                    .WithDescription("End Torque Environment")
+                    .WithExample(new []{"env", "end", "qwdj4jr9smf"});
+                
+                environment.AddCommand<EnvironmentListCommand>("list")
+                    .WithDescription("List Torque Environment")
+                    .WithExample(new []{"env", "list", "--show-ended"});
+                
+                environment.AddCommand<EnvironmentExtendCommand>("extend")
+                    .WithDescription("Extend Torque Environment")
+                    .WithExample(new []{"env", "extend", "qwdj4jr9smf", "--duration", "120"});
+            }).WithAlias("env");
+            
             config.AddBranch("config", configure =>
             {
                 configure.SetDescription("List, Add and Modify user profiles");
@@ -75,52 +122,7 @@ public class Program
                     .WithDescription("Associate Agent with Space")
                     .WithExample(new[] {"agent", "associate", "myAgent", "mySpace", "--ns", "demo", "--sa", "mySA"});
             });
-            
-            config.AddBranch("bp", blueprint =>
-            {
-                blueprint.SetDescription("Get, List, Validate blueprints.");
-                
-                blueprint.AddCommand<BlueprintGetCommand>("get")
-                    .WithDescription("Get blueprint by Name.")
-                    .WithExample(new [] { "bp", "get", "MyBp"});
 
-                blueprint.AddCommand<BlueprintListCommand>("list")
-                    .WithDescription("List blueprints")
-                    .WithExample(new [] { "bp", "list" });
-
-                blueprint.AddCommand<BlueprintValidateCommand>("validate")
-                    .WithDescription("Validate blueprint");
-                
-                blueprint.AddCommand<BlueprintPublishCommand>("publish")
-                    .WithDescription("Publish blueprint to catalog");
-                
-                blueprint.AddCommand<BlueprintUnpublishCommand>("unpublish")
-                    .WithDescription("Remove blueprint from catalog");
-            });
-            config.AddBranch("env", environment =>
-            {
-                environment.SetDescription("Start, End, View Torque environments.");
-                environment.AddCommand<EnvironmentStartCommand>("start")
-                    .WithDescription("Start Environment")
-                    .WithExample(new[] {"env", "start", "demo", "--duration=100", "--name=MyDemoEnv"});
-                
-                environment.AddCommand<EnvironmentGetCommand>("get")
-                    .WithDescription("Get Environment Details")
-                    .WithExample(new[] {"env", "get"});
-                
-                environment.AddCommand<EnvironmentEndCommand>("end")
-                    .WithDescription("End Torque Environment")
-                    .WithExample(new []{"env", "end", "qwdj4jr9smf"});
-                
-                environment.AddCommand<EnvironmentListCommand>("list")
-                    .WithDescription("List Torque Environment")
-                    .WithExample(new []{"env", "list", "--show-ended"});
-                
-                environment.AddCommand<EnvironmentExtendCommand>("extend")
-                    .WithDescription("Extend Torque Environment")
-                    .WithExample(new []{"env", "extend", "qwdj4jr9smf", "--duration", "120"});
-            });
-            
             config.AddBranch("space", space =>
             {
                 space.SetDescription("Create, delete spaces, connect repo to space.");

@@ -15,9 +15,22 @@ public class ConfigListCommand: Command
 
     public override int Execute(CommandContext context)
     {
-        var profiles = _profilesManager.ListUserProfiles();
-        var activeProfileName = _profilesManager.ReadActiveUserProfile().Name;
-        _consoleManager.WriteProfilesList(profiles, activeProfileName);
-        return 0;
+        try
+        {
+            var profiles = _profilesManager.ListUserProfiles();
+            if (profiles.Count == 0)
+                _consoleManager.WriteEmptyList("No profiles found");
+            else
+            {
+                var activeProfileName = _profilesManager.ReadActiveUserProfile().Name;
+                _consoleManager.WriteProfilesList(profiles, activeProfileName);
+            }
+            return 0;
+        }
+        catch (Exception e)
+        {
+            _consoleManager.WriteException(e);
+            return 1;
+        }
     }
 }
