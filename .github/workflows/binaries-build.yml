@@ -1,0 +1,41 @@
+name: Publish binaries
+
+on:
+  push:
+    # TODO: must be on tags only
+    branches:
+      - 'feature/deployment'
+jobs:
+  publish-binaries:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+          
+      - name: Publish
+        run: |
+          dotnet publish ./Quali.Torque.Cli --self-contained -r osx-x64  -c release -o ./osx-x64 -p:PublishSingleFile=true
+          dotnet publish ./Quali.Torque.Cli --self-contained -r linux-x64  -c release -o ./linux-x64 -p:PublishSingleFile=true
+          dotnet publish ./Quali.Torque.Cli --self-contained -r win-x64  -c release -o ./win-x64 -p:PublishSingleFile=true
+          
+      - name: Upload Win Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: torque-win-x64
+          path: ./win-x64
+          
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: torque-linux-x64
+          path: ./linux-x64
+            
+      - name: Upload Osx Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: torque-osx-x64
+          path: ./osx-x64
