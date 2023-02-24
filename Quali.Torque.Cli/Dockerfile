@@ -14,4 +14,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0
 LABEL org.opencontainers.image.source="https://github.com/QualiNext/torque-cli"
 WORKDIR /Quali.Torque.Cli
 COPY --from=build-env /Quali.Torque.Cli/out .
-ENTRYPOINT ["dotnet", "torque.dll"]
+ENTRYPOINT ["dotnet", "torque-cli.dll"]
