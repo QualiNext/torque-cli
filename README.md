@@ -68,14 +68,6 @@ export TORQUE_SPACE = demo_space
 export TORQUE_ACCOUNT = MYACCOUNT
 ```
 
-### Additional environment variables
-
-It is possible to switch the client to different Torque instance setting custom API endpoint:
-
-```bash
-export TORQUE_HOSTNAME = "torque.example.com"
-```
-
 The different parameters may also be provided as environment variables instead of using the config file:
 
 ```bash
