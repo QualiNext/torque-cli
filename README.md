@@ -14,6 +14,7 @@ To learn more about Torque, visit [https://qtorque.io](https://qtorque.io).
   `pip uninstall torque-cli`
 * Right now there are two ways to use torque-cli:
   * install it as a dotnet tool. In this case you need to have **dotnet** >=7.0 installed.
+    To install dotnet follow the link: https://dotnet.microsoft.com/en-us/download 
 
     `dotnet tool install -g torque-cli`
   * You also can run torque-cli as a docker container:
