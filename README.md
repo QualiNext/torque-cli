@@ -4,7 +4,7 @@
 
 ## Intro
 
-Torque CLI is the command-line tool for interacting with [Torque](https://qtorque.io), the EaaS platform.
+Torque CLI is a command-line tool for interacting with [Torque](https://qtorque.io), Quali's EaaS platform.
 To learn more about Torque, visit [https://qtorque.io](https://qtorque.io).
 
 ## Installing
@@ -13,34 +13,36 @@ To learn more about Torque, visit [https://qtorque.io](https://qtorque.io).
 
   `pip uninstall torque-cli`
 * Right now there are two ways to use torque-cli:
-  * install it as a dotnet tool. In this case you need to have **dotnet** >=7.0 installed.
-    To install dotnet follow the link: https://dotnet.microsoft.com/en-us/download 
+  * Install torque-cli as a .NET tool. In this case you need to have **dotnet** (version 7.0 or higher) installed.
+    To install dotnet, follow the link: https://dotnet.microsoft.com/en-us/download 
 
-    `dotnet tool install -g torque-cli`
-  * You also can run torque-cli as a docker container:
+    ```dotnet tool install -g torque-cli```
+  * Run torque-cli as a docker container:
   
-    `docker run -it qtorque/torque-cli:latest`
+    ```docker run -it qtorque/torque-cli:latest```
 
-    `docker run -it qtorque/torque-cli:latest -v ~/.torque:/root/.torque/ # to mount your local torque config file`
-* old configuration file will not work, so you will have to re-create it with `torque config set` command
+    ```docker run -it qtorque/torque-cli:latest -v ~/.torque:/root/.torque/ # to mount your local torque config file```
+* The old configuration file will not work, so you will have to re-create it with command: ```torque config set```
 
 ## Configuration
 
-In order to allow the CLI tool to authenticate with Torque you must provide several parameters:
-* *Token* The easiest way to generate a token is via the Torque UI. Navigate to *Settings (in your space) -> Integrations ->
-  click “Connect” under any of the CI tools -> click “New Token”* to get an API token.
-* *Space* The space in the Torque to use
-* *Repository* (optional) represents the name of Blueprint repository that will be used in a context of each call to Torque server
+To allow the torque-cli to authenticate with Torque, you must provide several parameters:
+* *Space*: The Torque space to use
+* *Repository*: (Optional) Represents the name of the git repository containing the bleprints and IaC files that will be used when calling Torque
+* *Token*: The easiest way to generate a token is via the Torque UI. 
+   1. In your space, go to **Settings > Integrations**.
+   2. Click **Connect** under any of the CI tools.
+   3. Click **New Token** to get an API token.
 
-The *Token*, *Space* and *Repository* parameters can be provided via special command line flags (*--token*, *--space*,  
-and *--repo* respectively) but can be conveniently placed in a config file relative to your user folder,
-so they don't need to be provided each time.
+The ```Token```, ```Space``` and ```Repository``` parameters can be provided via a special command line flags (```--token```, ```--space```, and ```--repo```, respectively). You can also conveniently place these parameters in a config file relative to your user folder, so they don't need to be provided each time.
 
-The config file can be easily created and managed using the interactive `torque config` command.
-The CLI supports multiple profiles, and you can switch between them by setting up the active for ease of use. To use a non-active profile the _--profile_ command line flag needs to be used to specify the profile name.
+The config file can be created and managed using the interactive `torque config` command.
+The CLI supports multiple profiles, and you can switch between them by setting the active profile for ease of use. To use a non-active profile, the ```--profile_``` command-line flag needs to be used to specify the profile name.
 
-To add a new profile or update an existing one run ```torque config set``` and follow the on-screen directions.
-To see all profiles run ```torque config list``` and the command will output a table of all the profiles that are currently configured. Example output:
+To add a new profile or update an existing one, run ```torque config set``` and follow the on-screen directions.
+To see all profiles, run ```torque config list``` and the command will output a table of all the profiles that are currently configured. 
+
+Example output:
 
 ```bash
 $ torque config list
@@ -52,35 +54,26 @@ $ torque config list
          │     test     │   dev    │   myrepo   │ ******masd
  ```
 
-If a profile is no longer needed it can be easily removed by running ```torque config remove <profile-name>```
+If a profile is no longer needed, you can remove it by running: ```torque config remove <profile-name>```
 
-The `torque config` command will save the config file relative to your home user directory ('~/.torque/config.yml' on Mac and Linux or in '%UserProfile%\\.torque\\config.yaml' on Windows).
-If you wish to place the config file in a different location, you can specify that location via an environment variable:
+The ```torque config``` command saves the config file relative to your home user directory ('~/.torque/config.yml' on Mac and Linux or in the '%UserProfile%\\.torque\\config.yaml' file on Windows).
+To place the config file in a different location, specify that location via an environment variable:
 
-`$ export TORQUE_CONFIG_PATH=/path/to/file`
+```$ export TORQUE_CONFIG_PATH=/path/to/file```
 
-
-The different parameters may also be provided as environment variables instead of using the config file:
+You can also provide the different parameters as environment variables instead of using the config file:
 
 ```bash
 export TORQUE_TOKEN = xxxzzzyyy
 export TORQUE_SPACE = demo_space
 # Optional
 export TORQUE_ACCOUNT = MYACCOUNT
-```
-
-The different parameters may also be provided as environment variables instead of using the config file:
-
-```bash
-export TORQUE_TOKEN = xxxzzzyyy
-export TORQUE_SPACE = demo_space
-# Optional
 export TORQUE_REPO_NAME = my_repo
 ```
 
 ### Additional environment variables
 
-It is possible to switch the client to different Torque instance setting custom API endpoint:
+It is possible to switch the client to a different Torque instance setting custom API endpoint:
 
 ```bash
 export TORQUE_URL = "https://demo.qtorque.io"
@@ -92,13 +85,13 @@ Torque CLI r
 
 There are some basic actions Torque CLI currently allows you to perform:
 
-- Validate a Blueprint (using the `torque bp validate` command)
-- Get a list of blueprints (via `torque bp list`)
-- Start an Environment (via `torque env start`)
+- Validate a blueprint (using the ```torque bp validate``` command)
+- Get a list of blueprints (via ```torque bp list```)
+- Start an environment (via ```torque env start```)
 
-In order to get help run:
+To see the help files, run:
 
-`$ torque --help`
+```$ torque --help```
 
 It will give you detailed output with usage:
 
@@ -126,7 +119,7 @@ agent          List, associate agents
 space          Create, delete spaces, connect repo to space
 ```
 
-You can get additional help information for a particular command by specifying *--help* flag after command name, like:
+You can get additional help information for a particular command by including  the ```--help``` flag after the command name, like:
 
 ```shell
 $ torque env -h
