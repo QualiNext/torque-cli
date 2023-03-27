@@ -67,21 +67,18 @@ You can also provide the different parameters as environment variables instead o
 export TORQUE_TOKEN = xxxzzzyyy
 export TORQUE_SPACE = demo_space
 # Optional
-export TORQUE_ACCOUNT = MYACCOUNT
 export TORQUE_REPO_NAME = my_repo
 ```
 
 ### Additional environment variables
 
-It is possible to switch the client to a different Torque instance setting custom API endpoint:
+It is possible to switch the client to a different Torque instance using a custom API endpoint:
 
 ```bash
 export TORQUE_URL = "https://demo.qtorque.io"
 ```
 
 ## Basic Usage
-
-Torque CLI r
 
 There are some basic actions Torque CLI currently allows you to perform:
 
