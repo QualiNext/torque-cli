@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Quali.Torque.Cli.Utils;
 
@@ -7,10 +8,9 @@ public static class UserAgentUtils
 {
     public static string GetCurrentVersion()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-        var version = fileVersionInfo.ProductVersion;
-        return version;
+        // Microsoft.Extensions.PlatformAbstractions
+        var app = PlatformServices.Default.Application;
+        return app.ApplicationVersion;
     }
 
     public static string[] ParseCustomUserAgent(string value)
