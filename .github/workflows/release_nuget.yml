@@ -33,8 +33,9 @@ jobs:
         run: dotnet nuget push torque.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-          
-#      - name: Push
-#        run: dotnet nuget push torque.${VERSION}.nupkg --source https://nuget.pkg.github.com/QualiNext/index.json --api-key ${GITHUB_TOKEN}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # # Push to GitHub Packages           
+      # - name: Push
+      #   run: dotnet nuget push torque.${VERSION}.nupkg --source https://nuget.pkg.github.com/QualiNext/index.json --api-key ${GITHUB_TOKEN}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
