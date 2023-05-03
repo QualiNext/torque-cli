@@ -30,7 +30,7 @@ jobs:
         run: dotnet pack --configuration Release --no-build --output . /p:Version=${VERSION}
 
       - name: Push
-        run: dotnet nuget push torque.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+        run: dotnet nuget push torque-cli.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
 
