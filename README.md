@@ -4,8 +4,8 @@
 
 ## Intro
 
-Torque CLI is a command-line tool for interacting with [Torque](https://qtorque.io), Quali's EaaS platform.
-To learn more about Torque, visit [https://qtorque.io](https://qtorque.io).
+Torque CLI is a command-line tool for interacting with [Torque](https://www.quali.com/torque/), Quali's EaaS platform.
+To learn more about Torque, visit [https://www.quali.com/torque/](https://www.quali.com/torque/).
 
 ## Installing
 
