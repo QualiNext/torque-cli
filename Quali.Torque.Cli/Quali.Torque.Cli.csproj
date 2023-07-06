@@ -7,7 +7,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <AssemblyName>torque-cli</AssemblyName>
+    <AssemblyName>torque</AssemblyName>
     <Company>Quali</Company>
     <VersionPrefix>2.0.1</VersionPrefix>
   </PropertyGroup>
