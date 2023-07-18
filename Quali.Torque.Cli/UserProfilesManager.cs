@@ -1,3 +1,4 @@
+using System.Net;
 using Quali.Torque.Cli.Models;
 
 namespace Quali.Torque.Cli;
@@ -15,13 +16,17 @@ public interface IUserProfilesManager
 public class ProfileNotFoundException : Exception
 {
     public ProfileNotFoundException(string message)
-        : base(message) { }
+        : base(message)
+    {
+    }
 }
 
 public class DuplicatedProfilesFoundException : Exception
 {
     public DuplicatedProfilesFoundException(string message)
-        : base(message) { }
+        : base(message)
+    {
+    }
 }
 
 public class UserProfilesManager : IUserProfilesManager
@@ -30,11 +35,12 @@ public class UserProfilesManager : IUserProfilesManager
     private readonly ITorqueConfigurationProvider _torqueConfigurationProvider;
     private readonly TorqueConfiguration _torqueConfiguration;
 
-    public UserProfilesManager(IEnvironmentProvider environmentProvider, ITorqueConfigurationProvider torqueConfigurationProvider)
+    public UserProfilesManager(IEnvironmentProvider environmentProvider,
+        ITorqueConfigurationProvider torqueConfigurationProvider)
     {
         _torqueConfigurationProvider = torqueConfigurationProvider;
         var configPath = environmentProvider.GetEnvironmentVariable(Constants.ConfigFileEnvVarName);
-        
+
         if (!string.IsNullOrEmpty(configPath))
         {
             _configPath = configPath;
@@ -47,18 +53,13 @@ public class UserProfilesManager : IUserProfilesManager
                 "config.yml");
         }
 
-        try
+        if (File.Exists(_configPath))
         {
             _torqueConfiguration = _torqueConfigurationProvider.LoadConfiguration(_configPath);
         }
-        catch (Exception)
+        else
         {
-            // TODO: log?
-            _torqueConfiguration = new TorqueConfiguration
-            {
-                ActiveProfile = null,
-                Profiles = new List<UserProfile>()
-            };
+            _torqueConfiguration = TorqueConfiguration.CreateEmpty();
         }
     }
 
@@ -77,15 +78,17 @@ public class UserProfilesManager : IUserProfilesManager
                 throw new DuplicatedProfilesFoundException(
                     $"Unable to update profile. Configuration has more than one profile with name '{profile.Name}'");
             }
+
             // a fresh config
             if (_torqueConfiguration.Profiles.Count == 0)
             {
                 _torqueConfiguration.ActiveProfile = profile.Name;
             }
+
             _torqueConfiguration.Profiles.Add(profile);
             _torqueConfigurationProvider.SaveConfiguration(_torqueConfiguration, _configPath);
         }
-        
+
         else
         {
             throw new ArgumentException("Profile name must be defined");
@@ -96,11 +99,7 @@ public class UserProfilesManager : IUserProfilesManager
     {
         try
         {
-            var result = _torqueConfiguration.Profiles.SingleOrDefault(profile => profile.Name == profileName);
-            if (result is null)
-                throw new ProfileNotFoundException(
-                    $"Profile with name '{profileName}' was not found in the configuration");
-            return result;
+            return _torqueConfiguration.Profiles.SingleOrDefault(profile => profile.Name == profileName);
         }
         catch (InvalidOperationException)
         {
@@ -121,7 +120,7 @@ public class UserProfilesManager : IUserProfilesManager
 
         try
         {
-            var result=  _torqueConfiguration.Profiles.SingleOrDefault(profile =>
+            var result = _torqueConfiguration.Profiles.SingleOrDefault(profile =>
                 _torqueConfiguration.ActiveProfile == profile.Name);
             if (result is null)
                 throw new ProfileNotFoundException(
@@ -145,7 +144,6 @@ public class UserProfilesManager : IUserProfilesManager
                     $"Unable to set active profile since the profile with name '{profileName}' was not found in the configuration");
             _torqueConfiguration.ActiveProfile = profileName;
             _torqueConfigurationProvider.SaveConfiguration(_torqueConfiguration, _configPath);
-            
         }
         catch (InvalidOperationException)
         {
@@ -162,7 +160,6 @@ public class UserProfilesManager : IUserProfilesManager
             if (targetProfile is not null)
             {
                 _torqueConfiguration.Profiles.Remove(targetProfile);
-                
             }
             else
             {
@@ -175,6 +172,7 @@ public class UserProfilesManager : IUserProfilesManager
             throw new DuplicatedProfilesFoundException(
                 $"Unable to remove profile. Configuration has more than one profile with name '{profileName}'");
         }
+
         // Check if active profile was associated with just removed item
         if (_torqueConfiguration.ActiveProfile == profileName)
         {
@@ -182,6 +180,7 @@ public class UserProfilesManager : IUserProfilesManager
             if (activeCandidate is not null)
                 _torqueConfiguration.ActiveProfile = activeCandidate.Name;
         }
-        _torqueConfigurationProvider.SaveConfiguration(_torqueConfiguration, _configPath);    
+
+        _torqueConfigurationProvider.SaveConfiguration(_torqueConfiguration, _configPath);
     }
 }
