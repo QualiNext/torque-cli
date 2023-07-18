@@ -19,7 +19,9 @@ public class ConfigListCommand: Command
         {
             var profiles = _profilesManager.ListUserProfiles();
             if (profiles.Count == 0)
+            {
                 _consoleManager.WriteEmptyList("No profiles found");
+            }
             else
             {
                 var activeProfileName = _profilesManager.ReadActiveUserProfile().Name;

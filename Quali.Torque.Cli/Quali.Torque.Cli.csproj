@@ -7,7 +7,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <AssemblyName>torque-cli</AssemblyName>
+    <AssemblyName>torque</AssemblyName>
     <Company>Quali</Company>
     <VersionPrefix>2.0.1</VersionPrefix>
   </PropertyGroup>
@@ -19,12 +19,12 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Salaros.ConfigParser" Version="0.3.8" />
-    <PackageReference Include="Spectre.Console" Version="0.46.1-preview.0.8" />
-    <PackageReference Include="Spectre.Console.CLI" Version="0.46.1-preview.0.8" />
-    <PackageReference Include="Spectre.Console.Json" Version="0.46.1-preview.0.8" />
-    <PackageReference Include="YamlDotNet" Version="13.0.1" />
+    <PackageReference Include="Spectre.Console" Version="0.47.0" />
+    <PackageReference Include="Spectre.Console.CLI" Version="0.47.0" />
+    <PackageReference Include="Spectre.Console.Json" Version="0.47.0" />
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>
 
 </Project>

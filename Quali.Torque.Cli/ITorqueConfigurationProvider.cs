@@ -21,7 +21,7 @@ public class TorqueYamlConfigurationProvider : ITorqueConfigurationProvider
             .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();
-        
+
         _deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();
@@ -29,8 +29,17 @@ public class TorqueYamlConfigurationProvider : ITorqueConfigurationProvider
 
     public void SaveConfiguration(TorqueConfiguration config, string filePath)
     {
-        var stringResult = _serializer.Serialize(config);
-        File.WriteAllText(filePath, stringResult);
+        var parentDirectory = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(parentDirectory))
+        {
+            Directory.CreateDirectory(parentDirectory);
+        }
+
+        using (var writer = new StreamWriter(filePath))
+        {
+            var stringResult = _serializer.Serialize(config);
+            writer.Write(stringResult);
+        }
     }
 
     public TorqueConfiguration LoadConfiguration(string filePath)

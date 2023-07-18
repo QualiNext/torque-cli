@@ -43,7 +43,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
 
         AnsiConsole.Write(table);
     }
-    
+
     public void WriteBlueprintsErrors(BlueprintValidationResponse result)
     {
         if (result.Errors.Count == 0)
@@ -51,6 +51,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
             AnsiConsole.MarkupLine("[green bold]Blueprint is valid[/]");
             return;
         }
+
         var table = new Table
         {
             Title = new TableTitle($"Blueprint Errors")
@@ -61,6 +62,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
         {
             table.AddRow(error.Code, error.Name, error.Message);
         }
+
         AnsiConsole.Write(table);
     }
 
@@ -116,19 +118,25 @@ public sealed class SpectreConsoleManager : IConsoleManager
         foreach (var profile in userProfiles)
         {
             var active = profile.Name == activeProfile ? "+" : "";
-            table.AddRow($"[green]{active}[/]", profile.Name, profile.Space, profile.RepositoryName ?? "", profile.Token.MaskToken());
+            table.AddRow($"[green]{active}[/]", profile.Name, profile.Space, profile.RepositoryName ?? "",
+                profile.Token.MaskToken());
         }
+
         AnsiConsole.Write(table);
     }
 
     public void WriteException(Exception ex)
     {
-        AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
+#if DEBUG
+        AnsiConsole.WriteException(ex);
+#else
+        WriteError(ex.Message); 
+#endif
     }
 
     public void WriteError(string errorMessage)
     {
-        AnsiConsole.Write(new Text(errorMessage, new Style(Color.Red, decoration:Decoration.Bold)));
+        AnsiConsole.Write(new Text(errorMessage, new Style(Color.Red, decoration: Decoration.Bold)));
         AnsiConsole.WriteLine();
     }
 
@@ -157,7 +165,6 @@ public sealed class SpectreConsoleManager : IConsoleManager
             new Text($"ID: {envId}", new Style(Color.Blue)),
             new Text($"Url: {envUrl}", new Style(Color.Green))
         ));
-
     }
 
     public async Task WaitEnvironment(EnvironmentWaiterData data)
@@ -205,7 +212,6 @@ public sealed class SpectreConsoleManager : IConsoleManager
                 }
 
                 throw new TimeoutException($"Environment was not active after {data.Timeout.ToString()} minutes");
-
             });
     }
 
@@ -226,7 +232,8 @@ public sealed class SpectreConsoleManager : IConsoleManager
         grid.AddGridDetailsRow("State", new Text(environment.Computed_status));
 
         var grainRows =
-            environment.State.Grains.Select(grain => new Markup($"[aqua bold]{grain.Name}[/]: {grain.State.Current_state}"))
+            environment.State.Grains
+                .Select(grain => new Markup($"[aqua bold]{grain.Name}[/]: {grain.State.Current_state}"))
                 .ToList();
         grid.AddGridDetailsRow("Grains", new Rows(grainRows));
 
@@ -248,6 +255,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
                 env.Details.Definition.Metadata.Blueprint_name.EscapeMarkup(),
                 env.Details.Computed_status);
         }
+
         AnsiConsole.Write(table);
     }
 
@@ -272,7 +280,7 @@ public sealed class SpectreConsoleManager : IConsoleManager
     {
         var spaceRows = spacesList.Select(space => new Text(space.Name, new Style(decoration: Decoration.Bold)))
             .ToList();
-        
+
         AnsiConsole.Write(new Rows(spaceRows));
     }
 }
