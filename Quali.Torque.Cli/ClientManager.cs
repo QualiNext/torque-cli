@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using Quali.Torque.Cli.Models;
 using Quali.Torque.Cli.Models.Settings.Base;
 using Torque.Cli.Api;
+using YamlDotNet.Core.Tokens;
 using static System.String;
 
 namespace Quali.Torque.Cli;
@@ -25,6 +26,82 @@ public class ClientManager : IClientManager
         _environmentProvider = environmentProvider;
     }
 
+    private string GetBaseUrl(UserContextSettings settings)
+    {
+        // Since overriding Torque URL is a rear case, we do not store it in a config file but allow reading from user
+
+        var baseUrl = Constants.DefaultTorqueUrl;
+
+        var envBaseUrl = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.BaseUrl); 
+        if (!string.IsNullOrEmpty(envBaseUrl))
+        {
+            baseUrl = envBaseUrl; 
+        }
+
+        if (settings != null && !string.IsNullOrEmpty(settings.BaseUrl))
+        {
+            baseUrl = settings.BaseUrl; 
+        }
+
+        return baseUrl;
+    }
+
+    private string GetRepositoryName(UserProfile fileProfile, UserContextSettings settings)
+    {
+        {
+            var repositoryName = fileProfile?.RepositoryName;
+            var envRepository = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.RepoName);
+            
+            if (!string.IsNullOrEmpty(envRepository))
+            {
+                repositoryName = envRepository; 
+            }
+
+            if (settings != null && !string.IsNullOrEmpty(settings.RepositoryName))
+            {
+                repositoryName = settings.RepositoryName; 
+            }
+        
+            return repositoryName;
+        }
+    }
+
+    private string GetSpace(UserProfile fileProfile, UserContextSettings settings)
+    {
+        var space = fileProfile?.Space;
+
+        var envSpace = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.Space); 
+        
+        if (!string.IsNullOrEmpty(envSpace))
+        {
+            space = envSpace; 
+        }
+
+        if (settings != null && !string.IsNullOrEmpty(settings.Space))
+        {
+            space = settings.Space; 
+        }
+        
+        return space;
+    }
+    private string GetToken(UserProfile fileProfile, UserContextSettings settings)
+    {
+        var token = fileProfile?.Token;
+
+        var envToken = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.Token);
+        if (!string.IsNullOrEmpty(envToken))
+        {
+            token = envToken; 
+        }
+
+        if (settings != null && !string.IsNullOrEmpty(settings.Token))
+        {
+            token = settings.Token; 
+        }
+        
+        return token; 
+    }
+    
     public TorqueApiClient GetClient(UserProfile userProfile)
     {
         var httpClient = _httpClientFactory.CreateClient("Default");
@@ -43,26 +120,14 @@ public class ClientManager : IClientManager
     /// </summary>
     public UserProfile FetchUserProfile(UserContextSettings settings)
     {
-        var userProfile = settings.Profile is null
-            ? _userProfilesManager.ReadActiveUserProfile()
-            : _userProfilesManager.ReadUserProfile(settings.Profile);
+        var fileProfile = _userProfilesManager.ReadActiveUserProfile();
+        var userProfile = new UserProfile();
 
-        userProfile.Space = settings.Space ??
-                            _environmentProvider.GetEnvironmentVariable(Constants.TorqueSpace) ?? 
-                            userProfile.Space;
-
-        userProfile.Token = settings.Token ??
-                            _environmentProvider.GetEnvironmentVariable(Constants.TorqueToken) ??
-                            userProfile.Token;
-
-        userProfile.RepositoryName = settings.RepositoryName ??
-                                     _environmentProvider.GetEnvironmentVariable(Constants.TorqueRepoName) ??
-                                     settings.RepositoryName;
-
-        // Since overriding Torque URL is a rear case, we do not store it in a config file but allow reading from user 
-        userProfile.BaseUrl = settings.BaseUrl ??
-                              _environmentProvider.GetEnvironmentVariable(Constants.BaseUrlEnvVarName) ??
-                              Constants.DefaultTorqueUrl;
+        userProfile.Token = GetToken(fileProfile, settings);
+        userProfile.Space =  GetSpace(fileProfile, settings);
+        userProfile.RepositoryName = GetRepositoryName(fileProfile, settings);
+        
+        userProfile.BaseUrl = GetBaseUrl(settings); 
 
         return userProfile;
     }

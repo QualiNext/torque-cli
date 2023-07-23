@@ -19,16 +19,24 @@ public class Program
         services.AddHttpClient<HttpClient>("Default", configure =>
         {
             ProductInfoHeaderValue productValue;
-            var userAgentHeader = Environment.GetEnvironmentVariable(Constants.UserAgentEnvVarName);
-            try
+            var userAgentHeader = Environment.GetEnvironmentVariable(EnvironmentVariables.UserAgent);
+
+            if (string.IsNullOrEmpty(userAgentHeader))
             {
-                var valueParts = UserAgentUtils.ParseCustomUserAgent(userAgentHeader);
-                productValue = new ProductInfoHeaderValue(valueParts[0], valueParts[1]);
-            }
-            catch (Exception)
-            {
-                // TODO: log error once logging is ready
                 productValue = new ProductInfoHeaderValue(Constants.DefaultUserAgentValue, UserAgentUtils.GetCurrentVersion());
+            }
+            else
+            {
+                try
+                {
+                    var valueParts = UserAgentUtils.ParseCustomUserAgent(userAgentHeader);
+                    productValue = new ProductInfoHeaderValue(valueParts[0], valueParts[1]);
+                }
+                catch (Exception)
+                {
+                    // TODO: log error once logging is ready
+                    productValue = new ProductInfoHeaderValue(Constants.DefaultUserAgentValue, UserAgentUtils.GetCurrentVersion());
+                }   
             }
             
             configure.DefaultRequestHeaders.UserAgent.Add(productValue);

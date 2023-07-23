@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quali.Torque.Cli", "Quali.Torque.Cli\Quali.Torque.Cli.csproj", "{A926B38D-A7B9-4737-8C53-D0BA08B8558E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quali.Torque.Cli.Tests.Unit", "Quali.Torque.Cli.Tests.Unit\Quali.Torque.Cli.Tests.Unit.csproj", "{36998F30-A5CD-4A8A-8165-A31F4D198E14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A926B38D-A7B9-4737-8C53-D0BA08B8558E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A926B38D-A7B9-4737-8C53-D0BA08B8558E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A926B38D-A7B9-4737-8C53-D0BA08B8558E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36998F30-A5CD-4A8A-8165-A31F4D198E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36998F30-A5CD-4A8A-8165-A31F4D198E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36998F30-A5CD-4A8A-8165-A31F4D198E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36998F30-A5CD-4A8A-8165-A31F4D198E14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

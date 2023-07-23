@@ -39,7 +39,7 @@ public class UserProfilesManager : IUserProfilesManager
         ITorqueConfigurationProvider torqueConfigurationProvider)
     {
         _torqueConfigurationProvider = torqueConfigurationProvider;
-        var configPath = environmentProvider.GetEnvironmentVariable(Constants.ConfigFileEnvVarName);
+        var configPath = environmentProvider.GetEnvironmentVariable(EnvironmentVariables.ConfigFile);
 
         if (!string.IsNullOrEmpty(configPath))
         {
@@ -116,15 +116,19 @@ public class UserProfilesManager : IUserProfilesManager
     public UserProfile ReadActiveUserProfile()
     {
         if (_torqueConfiguration.ActiveProfile is null)
-            throw new InvalidOperationException("Active profile is not set");
+        {
+            return null; 
+        }
 
         try
         {
             var result = _torqueConfiguration.Profiles.SingleOrDefault(profile =>
                 _torqueConfiguration.ActiveProfile == profile.Name);
             if (result is null)
-                throw new ProfileNotFoundException(
-                    "Profile with the name set as an active was not found in the configuration");
+            {
+                return null; 
+            }
+
             return result;
         }
         catch (InvalidOperationException)
