@@ -9,7 +9,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>torque</AssemblyName>
     <Company>Quali</Company>
-    <VersionPrefix>2.0.3</VersionPrefix>
+    <VersionPrefix>2.0.4</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
