@@ -1,4 +1,6 @@
+using System.Net;
 using Quali.Torque.Cli.Models.Settings.Blueprints;
+using Torque.Cli.Api;
 
 namespace Quali.Torque.Cli.Commands.Blueprints;
 
@@ -11,16 +13,30 @@ public class BlueprintGetCommand : TorqueMemberScopedCommand<BlueprintGetCommand
 
     protected override async Task RunTorqueCommandAsync(BlueprintGetCommandSettings settings)
     {
-        var blueprintDetails =
-            await Client.CatalogGETAsync(User.Space, settings.BlueprintName, User.RepositoryName);
+        try
+        {
+            var blueprintDetails =
+                await Client.CatalogGETAsync(User.Space, settings.BlueprintName, User.RepositoryName);
 
-        if (settings.Detail)
-        {
-            ConsoleManager.DumpJson(blueprintDetails);
+            if (settings.Detail)
+            {
+                ConsoleManager.DumpJson(blueprintDetails);
+            }
+            else
+            {
+                ConsoleManager.WriteBlueprintDetails(blueprintDetails);
+            }
         }
-        else
+        catch (ApiException<ErrorResponse> ex)
         {
-            ConsoleManager.WriteBlueprintDetails(blueprintDetails);
+            if (ex.StatusCode == (int) HttpStatusCode.NotFound)
+            {
+                ConsoleManager.WriteInfo($"Blueprint {settings.BlueprintName} not found in {User.RepositoryName}");
+            }
+            else
+            {
+                ConsoleManager.WriteException(ex);   
+            }
         }
     }
 }

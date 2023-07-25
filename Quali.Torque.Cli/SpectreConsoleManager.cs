@@ -14,7 +14,7 @@ public interface IConsoleManager
     void WriteBlueprintsErrors(BlueprintValidationResponse result);
     void WriteEmptyList(string title);
     void WriteProfilesList(List<UserProfile> userProfiles, string activeProfile);
-    void WriteException(Exception ex);
+    void WriteException(Exception ex, string errorMessage =null );
     void WriteError(string errorMessage);
     void DumpJson(object obj);
     T ReadUserInput<T>(string message, bool optional = false, bool masked = false);
@@ -25,6 +25,7 @@ public interface IConsoleManager
     void WriteEnvironmentList(ICollection<EnvironmentListItemResponse> envList);
     void WriteAgentList(ICollection<SpaceComputeServiceResponse> agentsList);
     void WriteSpaceList(ICollection<SpaceListItemResponse> spacesList);
+    void WriteInfo(string message);
 }
 
 public sealed class SpectreConsoleManager : IConsoleManager
@@ -125,12 +126,26 @@ public sealed class SpectreConsoleManager : IConsoleManager
         AnsiConsole.Write(table);
     }
 
-    public void WriteException(Exception ex)
+    public void WriteException(Exception ex, string errorMessage = null)
     {
 #if DEBUG
+        if(!string.IsNullOrEmpty(errorMessage))
+        {
+            WriteError(errorMessage);
+        }
+        
         AnsiConsole.WriteException(ex);
 #else
-        WriteError(ex.Message); 
+        if (string.IsNullOrEmpty(errorMessage))
+        {
+            WriteError(ex.Message);
+        }
+        else
+        {
+            WriteError(errorMessage+ ". Exception Message: " + ex.Message);
+        }
+
+         
 #endif
     }
 
@@ -282,5 +297,10 @@ public sealed class SpectreConsoleManager : IConsoleManager
             .ToList();
 
         AnsiConsole.Write(new Rows(spaceRows));
+    }
+
+    public void WriteInfo(string message)
+    {
+        AnsiConsole.Write(message);
     }
 }

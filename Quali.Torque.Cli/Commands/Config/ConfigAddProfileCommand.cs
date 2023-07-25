@@ -5,9 +5,9 @@ using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli.Commands.Config;
 
-public class ConfigSetCommand: ConfigBaseCommand<UserContextSettings>
+public class ConfigAddProfileCommand: ConfigBaseCommand<UserContextSettings>
 {
-    public ConfigSetCommand(IConsoleManager consoleManager, IUserProfilesManager profilesManager) : base(consoleManager, profilesManager)
+    public ConfigAddProfileCommand(IConsoleManager consoleManager, IUserProfilesManager profilesManager) : base(consoleManager, profilesManager)
     {
     }
 
@@ -20,34 +20,38 @@ public class ConfigSetCommand: ConfigBaseCommand<UserContextSettings>
             var profileName = settings.Profile 
                               ?? ConsoleManager.ReadUserInput<string>("Profile Name [default]: ", true);
             profileName = string.IsNullOrEmpty(profileName) ? "default" : profileName;
+            
             newProfile.Name = profileName;
-
-            UserProfile currentProfile;
 
             try
             {
-                currentProfile = ProfilesManager.ReadUserProfile(profileName);
+                var exisitingProfile = ProfilesManager.ReadUserProfile(profileName);
+                if (exisitingProfile != null)
+                {
+                    ConsoleManager.WriteError($"Unable to add profile {profileName}. Profile with the same name already exists.");
+                    return 1; 
+                }
+                
             }
-            catch (ProfileNotFoundException)
+            catch (Exception ex)
             {
-                currentProfile = new UserProfile();
-            }
-            catch (DuplicatedProfilesFoundException e)
-            {
-                throw new Exception("Profiles configuration might be broken. Details: " + e.Message);
+                ConsoleManager.WriteException(ex, "Unable to read configuration file");
+                return 1; 
+
             }
             
             // read token
+            
             if (!string.IsNullOrEmpty(settings.Token))
             {
                 newProfile.Token = settings.Token;
             }
             else
             {
-                var isTokenNeeded = string.IsNullOrEmpty(currentProfile.Token);
-                var msg = isTokenNeeded ? "Torque Token: " : $"Torque Token [{currentProfile.Token.MaskToken()}]: ";
+                var isTokenNeeded = string.IsNullOrEmpty(newProfile.Token);
+                var msg = isTokenNeeded ? "Torque Token: " : $"Torque Token [{newProfile.Token.MaskToken()}]: ";
                 var token = ConsoleManager.ReadUserInput<string>(msg, !isTokenNeeded, true);
-                newProfile.Token = string.IsNullOrEmpty(token) ? currentProfile.Token : token;
+                newProfile.Token = string.IsNullOrEmpty(token) ? newProfile.Token : token;
             }
             
             // read space
@@ -57,10 +61,10 @@ public class ConfigSetCommand: ConfigBaseCommand<UserContextSettings>
             }
             else
             {
-                var isSpaceNeeded = string.IsNullOrEmpty(currentProfile.Space);
-                var msg = isSpaceNeeded ? "Torque Space: " : $"Torque Space [{currentProfile.Space}]: ";
+                var isSpaceNeeded = string.IsNullOrEmpty(newProfile.Space);
+                var msg = isSpaceNeeded ? "Torque Space: " : $"Torque Space [{newProfile.Space}]: ";
                 var space = ConsoleManager.ReadUserInput<string>(msg, !isSpaceNeeded);
-                newProfile.Space = string.IsNullOrEmpty(space) ? currentProfile.Space : space;
+                newProfile.Space = string.IsNullOrEmpty(space) ? newProfile.Space : space;
             }
             
             // read repo
@@ -70,15 +74,17 @@ public class ConfigSetCommand: ConfigBaseCommand<UserContextSettings>
             }
             else
             {
-                var isRepoNeeded = string.IsNullOrEmpty(currentProfile.RepositoryName);
+                var isRepoNeeded = string.IsNullOrEmpty(newProfile.RepositoryName);
                 var msg = isRepoNeeded
                     ? "Torque Blueprint Repository: "
-                    : $"Torque Blueprints Repository [{currentProfile.RepositoryName}]: ";
+                    : $"Torque Blueprints Repository [{newProfile.RepositoryName}]: ";
                 var repo  = ConsoleManager.ReadUserInput<string>(msg, true); // repo might be always optional for now
-                newProfile.RepositoryName = string.IsNullOrEmpty(repo) ? currentProfile.RepositoryName: repo;
+                newProfile.RepositoryName = string.IsNullOrEmpty(repo) ? newProfile.RepositoryName: repo;
             }
             
             ProfilesManager.WriteUserProfile(newProfile);
+
+            ConsoleManager.WriteInfo("Profile added"); 
             
             return 0;
         }

@@ -107,15 +107,24 @@ public class Program
                 configure.SetDescription("List, Add and Modify user profiles");
                 configure.AddCommand<ConfigListCommand>("list")
                     .WithDescription("List all profiles")
-                    .WithExample(new[] {"config", "list"});
-                configure.AddCommand<ConfigSetCommand>("set")
-                    .WithDescription("Add or update torque user profile");
+                    .WithExample("config", "list");
+                
+                configure.AddCommand<ConfigAddProfileCommand>("add")
+                    .WithDescription("Add user profile")
+                    .WithAlias("add");
+                
+                configure.AddCommand<ConfigUpdateProfileCommand>("update")
+                    .WithDescription("Update user profile")
+                    .WithAlias("add");
+                
                 configure.AddCommand<ConfigRemoveCommand>("remove")
                     .WithDescription("Remove specified profile")
-                    .WithExample(new[] {"config", "remove", "myprofile"});
+                    .WithAlias("remove")
+                    .WithExample("config", "remove", "myprofile");
+                
                 configure.AddCommand<ConfigSetActiveCommand>("activate")
                     .WithDescription("Set active profile")
-                    .WithExample(new[] {"config", "activate", "myprofile"});
+                    .WithExample("config", "activate", "myprofile");
             });
 
             config.AddBranch("agent", agent =>
