@@ -5,10 +5,11 @@ WORKDIR /Quali.Torque.Cli
 # Copy everything
 COPY . ./
 # Restore as distinct layers
-RUN dotnet restore "./Quali.Torque.Cli/Quali.Torque.Cli.csproj"
+RUN dotnet restore
+# RUN dotnet restore "./Quali.Torque.Cli/Quali.Torque.Cli.csproj"
 # Build and publish a release
-# RUN dotnet publish -c Release -o out
-RUN dotnet publish "./Quali.Torque.Cli/Quali.Torque.Cli.csproj" -c Release -o out
+RUN dotnet publish -c Release -o out
+# RUN dotnet publish "./Quali.Torque.Cli/Quali.Torque.Cli.csproj" -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/runtime:7.0
