@@ -7,7 +7,8 @@ namespace Quali.Torque.Cli.Commands.Environments;
 public class EnvironmentStartCommand : TorqueMemberScopedCommand<EnvironmentStartUserContextSettings>
 {
     public EnvironmentStartCommand(IClientManager clientManager, IConsoleManager consoleManager) : base(clientManager,
-        consoleManager) { }
+        consoleManager)
+    { }
 
     private static string GenerateEnvironmentName(string blueprintName)
     {
@@ -22,15 +23,15 @@ public class EnvironmentStartCommand : TorqueMemberScopedCommand<EnvironmentStar
             Inputs = settings.Inputs,
             Environment_name = settings.Name ?? GenerateEnvironmentName(settings.BlueprintName),
             Duration = $"PT{settings.Duration}M",
+            Blueprint_name = settings.BlueprintName,
             Source = new BlueprintSourceRequest
             {
-                Blueprint_name = settings.BlueprintName,
                 Repository_name = settings.RepositoryName,
                 Branch = settings.Branch,
                 Commit = settings.CommitId
             }
         };
-        
+
         var envResponse = await Client.EnvironmentsPOSTAsync(User.Space, createEnvRequest);
 
         if (settings.WaitActive)
