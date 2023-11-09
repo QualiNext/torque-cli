@@ -2,9 +2,9 @@ name: Publish binaries
 
 on:
   push:
-    # TODO: must be on tags only
-    branches:
-      - 'feature/deployment'
+    tags:
+      - 'v*'
+      
 jobs:
   publish-binaries:
     runs-on: ubuntu-latest
