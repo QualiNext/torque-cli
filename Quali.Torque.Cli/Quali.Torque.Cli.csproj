@@ -10,6 +10,7 @@
     <AssemblyName>torque</AssemblyName>
     <Company>Quali</Company>
     <VersionPrefix>2.0.5</VersionPrefix>
+    <PackageId>qtorque</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
