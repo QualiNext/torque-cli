@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0.100-preview.2 AS build-env
 LABEL org.opencontainers.image.source="https://github.com/QualiNext/torque-cli"
 WORKDIR /Quali.Torque.Cli
 
