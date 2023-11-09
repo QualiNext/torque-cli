@@ -1,4 +1,6 @@
+# The version is pinned because of a bug (https://github.com/dotnet/sdk/issues/28971#issuecomment-1309328718)
 FROM mcr.microsoft.com/dotnet/sdk:7.0.100-preview.2 AS build-env
+
 LABEL org.opencontainers.image.source="https://github.com/QualiNext/torque-cli"
 WORKDIR /Quali.Torque.Cli
 
