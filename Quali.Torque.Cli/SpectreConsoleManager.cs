@@ -26,6 +26,8 @@ public interface IConsoleManager
     void WriteAgentList(ICollection<SpaceComputeServiceResponse> agentsList);
     void WriteSpaceList(ICollection<SpaceListItemResponse> spacesList);
     void WriteInfo(string message);
+    void WriteEacList(ICollection<EacResponse> eacList);
+    void WritePlan(GetEnvironmentPlanResultResponse plan, string settingsGrainPath);
 }
 
 public sealed class SpectreConsoleManager : IConsoleManager
@@ -302,5 +304,65 @@ public sealed class SpectreConsoleManager : IConsoleManager
     public void WriteInfo(string message)
     {
         AnsiConsole.Write(message);
+    }
+
+    public void WriteEacList(ICollection<EacResponse> eacList)
+    {
+        var table = new Table
+        {
+            Title = new TableTitle($"Torque EaC")
+        };
+        table.AddColumns("URL", "Environment Name", "Blueprint name", "Owner", "Status", "Environment ID");
+        foreach (var eac in eacList)
+        {
+            table.AddRow(eac.Url, eac.Environment_name.EscapeMarkup(), eac.Blueprint_name.EscapeMarkup(),
+                eac.Owner_email.EscapeMarkup(), eac.Status, eac.Environment_id ?? "");
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    public void WritePlan(GetEnvironmentPlanResultResponse plan, string grainPath)
+    {
+        if (grainPath != null)
+        {
+            var grainInfo = plan.Plan.Environment.Grains.FirstOrDefault(g =>
+                string.Equals(g.Path, grainPath, StringComparison.OrdinalIgnoreCase));
+            if (grainInfo == null)
+            {
+                WriteError($"No grain found with path {grainPath}");
+                return;
+            }
+
+            AnsiConsole.WriteLine(grainInfo.Content);
+            return;
+        }
+        
+        var grid = new Grid();
+        grid.AddColumn();
+        grid.AddColumn();
+
+        grid.AddGridDetailsRow("Status", new Text(plan.Status));
+        grid.AddGridDetailsRow("Errors", new Text(plan.Errors != null ? string.Join(", ", plan.Errors): "No Errors found"));
+
+        AnsiConsole.Write(grid);
+
+        if (plan?.Plan?.Environment?.Grains != null)
+        {
+            var table = new Table
+            {
+                Title = new TableTitle($"Grains")
+            };
+            table.AddColumns("Grain path", "Plan");
+            foreach (var grain in plan.Plan.Environment.Grains)
+            {
+                string planString = $"Source commit: {grain.Source_commit.EscapeMarkup()}" + Environment.NewLine +
+                                    $"Target commit: {grain.Target_commit.EscapeMarkup()}" + Environment.NewLine + Environment.NewLine +
+                                    $"{grain.Content.EscapeMarkup()}";
+                table.AddRow(grain.Path.EscapeMarkup(), planString);
+            }
+
+            AnsiConsole.Write(table);
+        }
     }
 }
