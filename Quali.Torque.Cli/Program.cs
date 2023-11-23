@@ -6,6 +6,7 @@ using Quali.Torque.Cli.Commands.Config;
 using Quali.Torque.Cli.Commands.Environments;
 using Quali.Torque.Cli.Commands.Spaces;
 using Quali.Torque.Cli.Utils;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli;
@@ -159,6 +160,20 @@ public class Program
                 // space.AddCommand<SpaceAddRepoCommand>("connect")
                 //     .WithDescription("Connect repo to space")
                 //     .WithExample(new[] {"space", "connect", "myRepo"});
+            });
+
+            config.AddBranch("eac", eac =>
+            {
+                eac.SetDescription("Handle environment-as-code actions.");
+                
+                eac.AddCommand<EacListCommand>("list")
+                    .WithDescription("List all current Git-managed environments and their status.")
+                    .WithExample(new[] {"eac", "list"});
+                
+                eac.AddCommand<RunPlanCommand>("plan")
+                    .WithDescription("Runs a plan against an environment and returns the results.")
+                    .WithExample(new[] {"eac", "plan", "qwdj4jr9smf"})
+                    .WithExample(new[] {"eac", "plan", "qwdj4jr9smf", "-g", "myGrain"});
             });
         });
  
