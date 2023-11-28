@@ -33,15 +33,18 @@ public class ClientManager : IClientManager
         var baseUrl = Constants.DefaultTorqueUrl;
 
         var envBaseUrl = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.BaseUrl); 
+        
+        if (settings != null && !string.IsNullOrEmpty(settings.BaseUrl))
+        {
+            baseUrl = settings.BaseUrl; 
+        }
+        
         if (!string.IsNullOrEmpty(envBaseUrl))
         {
             baseUrl = envBaseUrl; 
         }
 
-        if (settings != null && !string.IsNullOrEmpty(settings.BaseUrl))
-        {
-            baseUrl = settings.BaseUrl; 
-        }
+        baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + "/";
 
         return baseUrl;
     }
