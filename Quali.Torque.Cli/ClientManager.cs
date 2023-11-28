@@ -26,14 +26,15 @@ public class ClientManager : IClientManager
         _environmentProvider = environmentProvider;
     }
 
-    private string GetBaseUrl(UserContextSettings settings)
+    private string GetBaseUrl(UserContextSettings settings, string fileBaseUrl)
     {
-        // Since overriding Torque URL is a rear case, we do not store it in a config file but allow reading from user
 
         var baseUrl = Constants.DefaultTorqueUrl;
 
-        var envBaseUrl = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.BaseUrl); 
-        
+        var envBaseUrl = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.BaseUrl);
+
+        baseUrl = string.IsNullOrWhiteSpace(fileBaseUrl) ? baseUrl : fileBaseUrl;
+
         if (settings != null && !string.IsNullOrEmpty(settings.BaseUrl))
         {
             baseUrl = settings.BaseUrl; 
@@ -130,7 +131,7 @@ public class ClientManager : IClientManager
         userProfile.Space =  GetSpace(fileProfile, settings);
         userProfile.RepositoryName = GetRepositoryName(fileProfile, settings);
         
-        userProfile.BaseUrl = GetBaseUrl(settings); 
+        userProfile.BaseUrl = GetBaseUrl(settings, fileProfile.BaseUrl); 
 
         return userProfile;
     }
