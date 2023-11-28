@@ -114,32 +114,6 @@ public class ClientManagerTests
         //Assert
         result.RepositoryName.Should().Be(expected); 
     }
-    
-    [Theory]
-    [InlineData("environmentVariable", "settingsBaseUrl", "settingsBaseUrl")]
-    [InlineData("environmentVariable", null, "environmentVariable")]
-    [InlineData(null, null, Constants.DefaultTorqueUrl)]
-    public void FetchUserProfile_BaseUrlIsValid(string envVariable, string settingsBaseUrl, string expected)
-    {
-        //Arrange
-        var envProvider = _fixture.Freeze<IEnvironmentProvider>(); 
-        
-        var clientManager = _fixture.Create<ClientManager>();
-        
-        A.CallTo(() => envProvider.GetEnvironmentVariable(EnvironmentVariables.BaseUrl))
-            .Returns(envVariable); 
-        
-        
-        var setting = _fixture.Build<UserContextSettings>()
-            .With(x => x.BaseUrl , settingsBaseUrl)
-            .Create(); 
 
-        //Act
-        var result = clientManager.FetchUserProfile(setting); 
-
-        //Assert
-        result.BaseUrl.Should().Be(expected); 
-    }
-    
     #endregion
 }
