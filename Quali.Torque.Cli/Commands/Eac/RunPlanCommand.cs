@@ -1,5 +1,6 @@
 using Quali.Torque.Cli.Models.Settings.Eac;
 using Quali.Torque.Cli.Models.Settings.Environments;
+using Quali.Torque.Cli.Utils;
 using Spectre.Console;
 using Torque.Cli.Api;
 
@@ -19,6 +20,11 @@ public class RunPlanCommand : TorqueMemberScopedCommand<PlanCommandSettings>
                 "This commands expects the contents of an environment yaml file to be piped in. \r\n e.g., cat env.yaml | torque plan <ENVIRONMENT-ID>");
             return;
         }
+        
+        IEnumerable<EacResponse> eacs = await Client.EacAsync(User.Space);
+        if (EnvironmentHelper.TryGetEnvIdFromUrl(settings.EnvironmentId, eacs, out string environmentId))
+            settings.EnvironmentId = environmentId;
+
 
         var envYaml = await Console.In.ReadToEndAsync();
 
