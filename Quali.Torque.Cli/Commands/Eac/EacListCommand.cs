@@ -1,6 +1,6 @@
 using Quali.Torque.Cli.Models.Settings.Base;
 
-namespace Quali.Torque.Cli.Commands.Blueprints;
+namespace Quali.Torque.Cli.Commands.Eac;
 
 public class EacListCommand : TorqueMemberScopedCommand<DetailedUserContextSettings>
 {
