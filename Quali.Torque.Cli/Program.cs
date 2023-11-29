@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Quali.Torque.Cli.Commands.Agents;
 using Quali.Torque.Cli.Commands.Blueprints;
 using Quali.Torque.Cli.Commands.Config;
+using Quali.Torque.Cli.Commands.Eac;
 using Quali.Torque.Cli.Commands.Environments;
 using Quali.Torque.Cli.Commands.Spaces;
 using Quali.Torque.Cli.Utils;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quali.Torque.Cli;
@@ -168,7 +168,11 @@ public class Program
                 
                 eac.AddCommand<EacListCommand>("list")
                     .WithDescription("List all current Git-managed environments and their status.")
-                    .WithExample(new[] {"eac", "list"});
+                    .WithExample(new[] {"eac", "list"});           
+                
+                eac.AddCommand<ExportEacCommand>("export")
+                    .WithDescription("Generates an environment YAML file from an existing environment.")
+                    .WithExample(new[] {"eac", "export", "qwdj4jr9smf"});
                 
                 eac.AddCommand<RunPlanCommand>("plan")
                     .WithDescription("Runs a plan against an environment and returns the results.")

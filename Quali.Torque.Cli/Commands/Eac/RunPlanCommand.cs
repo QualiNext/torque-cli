@@ -1,10 +1,9 @@
 using Quali.Torque.Cli.Models.Settings.Eac;
-using Quali.Torque.Cli.Models.Settings.Environments;
 using Quali.Torque.Cli.Utils;
 using Spectre.Console;
 using Torque.Cli.Api;
 
-namespace Quali.Torque.Cli.Commands.Environments;
+namespace Quali.Torque.Cli.Commands.Eac;
 
 public class RunPlanCommand : TorqueMemberScopedCommand<PlanCommandSettings>
 {
