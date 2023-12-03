@@ -37,12 +37,12 @@ public class ClientManager : IClientManager
 
         if (settings != null && !string.IsNullOrEmpty(settings.BaseUrl))
         {
-            baseUrl = settings.BaseUrl; 
+            baseUrl = settings.BaseUrl;
         }
-        
+
         if (!string.IsNullOrEmpty(envBaseUrl))
         {
-            baseUrl = envBaseUrl; 
+            baseUrl = envBaseUrl;
         }
 
         baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + "/";
@@ -55,17 +55,17 @@ public class ClientManager : IClientManager
         {
             var repositoryName = fileProfile?.RepositoryName;
             var envRepository = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.RepoName);
-            
+
             if (!string.IsNullOrEmpty(envRepository))
             {
-                repositoryName = envRepository; 
+                repositoryName = envRepository;
             }
 
             if (settings != null && !string.IsNullOrEmpty(settings.RepositoryName))
             {
-                repositoryName = settings.RepositoryName; 
+                repositoryName = settings.RepositoryName;
             }
-        
+
             return repositoryName;
         }
     }
@@ -74,18 +74,18 @@ public class ClientManager : IClientManager
     {
         var space = fileProfile?.Space;
 
-        var envSpace = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.Space); 
-        
+        var envSpace = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.Space);
+
         if (!string.IsNullOrEmpty(envSpace))
         {
-            space = envSpace; 
+            space = envSpace;
         }
 
         if (settings != null && !string.IsNullOrEmpty(settings.Space))
         {
-            space = settings.Space; 
+            space = settings.Space;
         }
-        
+
         return space;
     }
     private string GetToken(UserProfile fileProfile, UserContextSettings settings)
@@ -95,23 +95,23 @@ public class ClientManager : IClientManager
         var envToken = _environmentProvider.GetEnvironmentVariable(EnvironmentVariables.Token);
         if (!string.IsNullOrEmpty(envToken))
         {
-            token = envToken; 
+            token = envToken;
         }
 
         if (settings != null && !string.IsNullOrEmpty(settings.Token))
         {
-            token = settings.Token; 
+            token = settings.Token;
         }
-        
-        return token; 
+
+        return token;
     }
-    
+
     public TorqueApiClient GetClient(UserProfile userProfile)
     {
         var httpClient = _httpClientFactory.CreateClient("Default");
         var token = userProfile.Token;
         var baseUrl = userProfile.BaseUrl;
-        
+
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return new TorqueApiClient(baseUrl, httpClient);
     }
@@ -128,10 +128,10 @@ public class ClientManager : IClientManager
         var userProfile = new UserProfile();
 
         userProfile.Token = GetToken(fileProfile, settings);
-        userProfile.Space =  GetSpace(fileProfile, settings);
+        userProfile.Space = GetSpace(fileProfile, settings);
         userProfile.RepositoryName = GetRepositoryName(fileProfile, settings);
-        
-        userProfile.BaseUrl = GetBaseUrl(settings, fileProfile.BaseUrl); 
+
+        userProfile.BaseUrl = GetBaseUrl(settings, fileProfile?.BaseUrl);
 
         return userProfile;
     }
