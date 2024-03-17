@@ -143,3 +143,20 @@ COMMANDS:
     list                       List Torque Environment
     extend <ENVIRONMENT-ID>    Extend Torque Environment
 ```
+
+## Bulk deploy
+
+The CLI allows for deplying multiple environments defined in a CSV file.
+
+```shell
+torque.exe env bulkstart <PATH-TO-CSV>
+```
+The lines of the CSV are itterated, starting an environment for each line. If a line specifies multiple owners, a separate environment (with the same parameters) will be started for each owner.
+#### CSV format
+```csv
+Space,Blueprint,Repository,Duration (Minutes),Owners,Inputs
+space_name,blueprint_name,blueprint_repo_name,duration_integer,owner_email,input_name1:input_value1;input_name2:input_value2
+```
+* The first line is assumed to contain headers and is skipped.
+* The 'Owners' field may contain a list of emails separated with ; or a single value. an environment is createdf per owner.
+* Inputs - A list of inputs matching the blueprint. the format is input_name1:input_value1;input_name2:input_value2
