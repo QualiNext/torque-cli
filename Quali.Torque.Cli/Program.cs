@@ -86,6 +86,10 @@ public class Program
                     .WithDescription("Start Environment")
                     .WithExample(new[] {"env", "start", "demo", "--duration=100", "--name=MyDemoEnv"});
                 
+                environment.AddCommand<EnvironmentBulkStartCommand>("bulkstart")
+                    .WithDescription("Start Environment")
+                    .WithExample(new[] {"env", "bulkstart", "<CSV file path>>"});
+
                 environment.AddCommand<EnvironmentGetCommand>("get")
                     .WithDescription("Get Environment Details")
                     .WithExample(new[] {"env", "get"});

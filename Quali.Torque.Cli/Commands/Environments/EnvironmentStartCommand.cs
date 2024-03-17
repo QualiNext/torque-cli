@@ -19,44 +19,57 @@ public class EnvironmentStartCommand : TorqueMemberScopedCommand<EnvironmentStar
 
     protected override async Task RunTorqueCommandAsync(EnvironmentStartUserContextSettings settings)
     {
-        ICollection<GetWorkflowLaunchDetailsResponse> workflowLaunchDetails = await Client.DetailsAsync(User.Space);
+        string environmentName = string.IsNullOrWhiteSpace(settings.Name)
+            ? GenerateEnvironmentName(settings.BlueprintName)
+            : settings.Name;
+        await StartEnvironment(ConsoleManager, Client, User.Space, settings.RepositoryName, settings.Branch,
+            settings.CommitId, settings.BlueprintName, settings.Inputs, environmentName, settings.Duration, 
+            null, settings.WaitActive, settings.Timeout, settings.Detail);
+    }
+
+    public static async Task StartEnvironment(IConsoleManager consoleManager, TorqueApiClient client, string space,
+        string repository, string branch, string commitId, string blueprintName, IDictionary<string, string> inputs,
+        string environmentName, int durationMinutes, string owner, bool waitActive, int timeout, bool detail)
+    {
+        ICollection<GetWorkflowLaunchDetailsResponse> workflowLaunchDetails = await client.DetailsAsync(space);
         var workflowRequest = WorkflowLaunchDetailsToWorkflowRequest(workflowLaunchDetails);
         var createEnvRequest = new CreateSandboxRequest
         {
-            Inputs = settings.Inputs,
-            Environment_name = settings.Name ?? GenerateEnvironmentName(settings.BlueprintName),
-            Duration = $"PT{settings.Duration}M",
-            Blueprint_name = settings.BlueprintName,
+            Owner_email = owner,
+            Inputs = inputs,
+            Environment_name = environmentName,
+            Duration = $"PT{durationMinutes}M",
+            Blueprint_name = blueprintName,
             Source = new BlueprintSourceRequest
             {
-                Repository_name = settings.RepositoryName,
-                Branch = settings.Branch,
-                Commit = settings.CommitId
+                Repository_name = repository,
+                Branch = branch,
+                Commit = commitId
             },
             Workflows = workflowRequest
         };
 
-        var envResponse = await Client.EnvironmentsPOSTAsync(User.Space, createEnvRequest);
+        var envResponse = await client.EnvironmentsPOSTAsync(space, createEnvRequest);
 
-        if (settings.WaitActive)
+        if (waitActive)
         {
-            await ConsoleManager.WaitEnvironment(new EnvironmentWaiterData
+            await consoleManager.WaitEnvironment(new EnvironmentWaiterData
             {
-                Timeout = settings.Timeout,
-                Space = User.Space,
-                Client = Client,
+                Timeout = timeout,
+                Space = space,
+                Client = client,
                 EnvironmentId = envResponse.Id
             });
         }
 
-        if (settings.Detail)
-            ConsoleManager.DumpJson(envResponse);
+        if (detail)
+            consoleManager.DumpJson(envResponse);
         else
-            ConsoleManager.WriteEnvironmentCreated(envResponse.Id,
-                $"{Client.BaseUrl}/{User.Space}/sandboxes/{envResponse.Id}/devops");
+            consoleManager.WriteEnvironmentCreated(envResponse.Id,
+                $"{client.BaseUrl}/{space}/sandboxes/{envResponse.Id}/devops");
     }
 
-    private ICollection<LaunchWorkflowRequest> WorkflowLaunchDetailsToWorkflowRequest(
+    private static ICollection<LaunchWorkflowRequest> WorkflowLaunchDetailsToWorkflowRequest(
         ICollection<GetWorkflowLaunchDetailsResponse> workflowsDetails)
     {
         return workflowsDetails.Select(workflowLaunchDetails => new LaunchWorkflowRequest
