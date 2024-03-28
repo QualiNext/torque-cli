@@ -34,7 +34,7 @@ public class EnvironmentBulkStartCommand : TorqueMemberScopedCommand<Environment
             {
                 inputs = values[5].Split(';').Select(pair => pair.Split(':')).ToDictionary(pair => pair[0], pair => pair[1]);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ConsoleManager.WriteError($"Error parsing inputs on line {lineNumber}. Unparsed value was \"{values[5]}\", expected input in the format name:value;name:value. Skipping line.");
                 continue;
