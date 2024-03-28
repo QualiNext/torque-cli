@@ -75,7 +75,7 @@ public class EnvironmentStartCommand : TorqueMemberScopedCommand<EnvironmentStar
         return workflowsDetails.Select(workflowLaunchDetails => new LaunchWorkflowRequest
         {
             Name = workflowLaunchDetails.Workflow_name,
-            Schedules = workflowLaunchDetails.Scheduler.Cron_expressions
+            Schedules = workflowLaunchDetails.Scheduler?.Cron_expressions
                 .Select(s => new LaunchScheduleRequest { Overridden = false, Scheduler = s })
                 .ToList()
         }).ToList();
