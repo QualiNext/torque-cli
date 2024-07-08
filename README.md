@@ -16,7 +16,12 @@ To learn more about Torque, visit [https://www.quali.com/torque/](https://www.qu
   * Install torque-cli as a .NET tool. In this case you need to have **dotnet** (version 7.0 or higher) installed.
     To install dotnet, follow the link: https://dotnet.microsoft.com/en-us/download 
 
-    ```dotnet tool install -g torque --version latest --add-source https://nuget.pkg.github.com/QualiNext/index.json```
+    ```dotnet tool install -g torque --version ${VERSION} --add-source https://nuget.pkg.github.com/QualiNext/index.json```
+
+    For example:
+    
+    ```dotnet tool install -g torque --version 2.5.0 --add-source https://nuget.pkg.github.com/QualiNext/index.json```
+
   * Run torque-cli as a docker container:
   
     ```docker run -it qtorque/torque-cli:latest```
