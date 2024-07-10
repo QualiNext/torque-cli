@@ -20,6 +20,8 @@ To learn more about Torque, visit [https://www.quali.com/torque/](https://www.qu
     ```docker run -it quali/torque-cli:latest```
 
     ```docker run -it quali/torque-cli:latest -v ~/.torque:/root/.torque/ # to mount your local torque config file```
+
+
 * The old configuration file will not work, so you will have to re-create it with command: ```torque-cli config set```
 
 ## Configuration
@@ -127,20 +129,21 @@ USAGE:
 
 EXAMPLES:
     torque-cli env start demo --duration=100 --name=MyDemoEnv
+    torque-cli env bulkstart <CSV file path>>
     torque-cli env get
     torque-cli env end qwdj4jr9smf
     torque-cli env list --show-ended
-    torque-cli env extend qwdj4jr9smf --duration 120
 
 OPTIONS:
     -h, --help    Prints help information
 
 COMMANDS:
-    start <BLUEPRINT-NAME>     Start Environment
-    get <ENVIRONMENT-ID>       Get Environment Details
-    end <ENVIRONMENT-ID>       End Torque Environment
-    list                       List Torque Environment
-    extend <ENVIRONMENT-ID>    Extend Torque Environment
+    start <BLUEPRINT-NAME>       Start Environment        
+    bulkstart <CSV file path>    Start Environment        
+    get <ENVIRONMENT-ID>         Get Environment Details  
+    end <ENVIRONMENT-ID>         End Torque Environment   
+    list                         List Torque Environment  
+    extend <ENVIRONMENT-ID>      Extend Torque Environment
 ```
 
 ## Bulk deploy
