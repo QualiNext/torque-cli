@@ -37,96 +37,96 @@ public class Program
                 {
                     // TODO: log error once logging is ready
                     productValue = new ProductInfoHeaderValue(Constants.DefaultUserAgentValue, UserAgentUtils.GetCurrentVersion());
-                }   
+                }
             }
-            
+
             configure.DefaultRequestHeaders.UserAgent.Add(productValue);
         });
         services.AddSingleton<IUserProfilesManager, UserProfilesManager>();
         services.AddSingleton<IEnvironmentProvider, EnvironmentProvider>();
         services.AddSingleton<ITorqueConfigurationProvider, TorqueYamlConfigurationProvider>();
 
-        services.AddSingleton<IConsoleManager, SpectreConsoleManager>(); 
+        services.AddSingleton<IConsoleManager, SpectreConsoleManager>();
         services.AddSingleton<IClientManager, ClientManager>();
 
         var registrar = new TypeRegistrar(services);
         var app = new CommandApp(registrar);
-        
+
         app.Configure(config =>
         {
-            config.SetApplicationName("torque");
+            config.SetApplicationName("torque-cli");
             config.ValidateExamples();
-           
+
             config.AddBranch("blueprint", blueprint =>
             {
                 blueprint.SetDescription("Get, List, Validate blueprints.");
-                
+
                 blueprint.AddCommand<BlueprintGetCommand>("get")
                     .WithDescription("Get blueprint by Name.")
-                    .WithExample(new [] { "bp", "get", "MyBp"});
+                    .WithExample(new[] { "bp", "get", "MyBp" });
 
                 blueprint.AddCommand<BlueprintListCommand>("list")
                     .WithDescription("List blueprints")
-                    .WithExample(new [] { "bp", "list" });
+                    .WithExample(new[] { "bp", "list" });
 
                 blueprint.AddCommand<BlueprintValidateCommand>("validate")
                     .WithDescription("Validate blueprint");
-                
+
                 blueprint.AddCommand<BlueprintPublishCommand>("publish")
                     .WithDescription("Publish blueprint to catalog");
-                
+
                 blueprint.AddCommand<BlueprintUnpublishCommand>("unpublish")
                     .WithDescription("Remove blueprint from catalog");
             }).WithAlias("bp");
-            
+
             config.AddBranch("environment", environment =>
             {
                 environment.SetDescription("Start, End, View Torque environments.");
                 environment.AddCommand<EnvironmentStartCommand>("start")
                     .WithDescription("Start Environment")
-                    .WithExample(new[] {"env", "start", "demo", "--duration=100", "--name=MyDemoEnv"});
-                
+                    .WithExample(new[] { "env", "start", "demo", "--duration=100", "--name=MyDemoEnv" });
+
                 environment.AddCommand<EnvironmentBulkStartCommand>("bulkstart")
                     .WithDescription("Start Environment")
-                    .WithExample(new[] {"env", "bulkstart", "<CSV file path>>"});
+                    .WithExample(new[] { "env", "bulkstart", "<CSV file path>>" });
 
                 environment.AddCommand<EnvironmentGetCommand>("get")
                     .WithDescription("Get Environment Details")
-                    .WithExample(new[] {"env", "get"});
-                
+                    .WithExample(new[] { "env", "get" });
+
                 environment.AddCommand<EnvironmentEndCommand>("end")
                     .WithDescription("End Torque Environment")
-                    .WithExample(new []{"env", "end", "qwdj4jr9smf"});
-                
+                    .WithExample(new[] { "env", "end", "qwdj4jr9smf" });
+
                 environment.AddCommand<EnvironmentListCommand>("list")
                     .WithDescription("List Torque Environment")
-                    .WithExample(new []{"env", "list", "--show-ended"});
-                
+                    .WithExample(new[] { "env", "list", "--show-ended" });
+
                 environment.AddCommand<EnvironmentExtendCommand>("extend")
                     .WithDescription("Extend Torque Environment")
-                    .WithExample(new []{"env", "extend", "qwdj4jr9smf", "--duration", "120"});
+                    .WithExample(new[] { "env", "extend", "qwdj4jr9smf", "--duration", "120" });
             }).WithAlias("env");
-            
+
             config.AddBranch("config", configure =>
             {
                 configure.SetDescription("List, Add and Modify user profiles");
                 configure.AddCommand<ConfigListCommand>("list")
                     .WithDescription("List all profiles")
                     .WithExample("config", "list");
-                
+
                 configure.AddCommand<ConfigAddProfileCommand>("add")
                     .WithDescription("Add user profile")
                     .WithAlias("add");
-                
+
                 configure.AddCommand<ConfigUpdateProfileCommand>("update")
                     .WithDescription("Update user profile")
                     .WithAlias("add");
-                
+
                 configure.AddCommand<ConfigRemoveCommand>("remove")
                     .WithDescription("Remove specified profile")
                     .WithAlias("remove")
                     .WithExample("config", "remove", "myprofile");
-                
+
                 configure.AddCommand<ConfigSetActiveCommand>("activate")
                     .WithDescription("Set active profile")
                     .WithExample("config", "activate", "myprofile");
@@ -138,11 +138,11 @@ public class Program
 
                 agent.AddCommand<AgentsListCommand>("list")
                     .WithDescription("List agents in Space.")
-                    .WithExample(new[] {"agent", "list", "mySpace"});
+                    .WithExample(new[] { "agent", "list", "mySpace" });
 
                 agent.AddCommand<AgentAssociateWithSpaceCommand>("associate")
                     .WithDescription("Associate Agent with Space")
-                    .WithExample(new[] {"agent", "associate", "myAgent", "mySpace", "--ns", "demo", "--sa", "mySA"});
+                    .WithExample(new[] { "agent", "associate", "myAgent", "mySpace", "--ns", "demo", "--sa", "mySA" });
             });
 
             config.AddBranch("space", space =>
@@ -151,15 +151,15 @@ public class Program
 
                 space.AddCommand<SpaceCreateCommand>("create")
                     .WithDescription("Create space")
-                    .WithExample(new[] {"space", "create", "demo"});
+                    .WithExample(new[] { "space", "create", "demo" });
 
                 space.AddCommand<SpaceDeleteCommand>("delete")
                     .WithDescription("Delete space")
-                    .WithExample(new[] {"space", "delete", "demo"});
+                    .WithExample(new[] { "space", "delete", "demo" });
 
                 space.AddCommand<SpaceListCommand>("list")
                     .WithDescription("Show list of spaces")
-                    .WithExample(new[] {"space", "list"});
+                    .WithExample(new[] { "space", "list" });
 
                 // space.AddCommand<SpaceAddRepoCommand>("connect")
                 //     .WithDescription("Connect repo to space")
@@ -169,22 +169,22 @@ public class Program
             config.AddBranch("eac", eac =>
             {
                 eac.SetDescription("Handle environment-as-code actions.");
-                
+
                 eac.AddCommand<EacListCommand>("list")
                     .WithDescription("List all current Git-managed environments and their status.")
-                    .WithExample(new[] {"eac", "list"});           
-                
+                    .WithExample(new[] { "eac", "list" });
+
                 eac.AddCommand<ExportEacCommand>("export")
                     .WithDescription("Generates an environment YAML file from an existing environment.")
-                    .WithExample(new[] {"eac", "export", "qwdj4jr9smf"});
-                
+                    .WithExample(new[] { "eac", "export", "qwdj4jr9smf" });
+
                 eac.AddCommand<RunPlanCommand>("plan")
                     .WithDescription("Runs a plan against an environment and returns the results.")
-                    .WithExample(new[] {"eac", "plan", "qwdj4jr9smf"})
-                    .WithExample(new[] {"eac", "plan", "qwdj4jr9smf", "-g", "myGrain"});
+                    .WithExample(new[] { "eac", "plan", "qwdj4jr9smf" })
+                    .WithExample(new[] { "eac", "plan", "qwdj4jr9smf", "-g", "myGrain" });
             });
         });
- 
+
         return app.Run(args);
     }
 }
