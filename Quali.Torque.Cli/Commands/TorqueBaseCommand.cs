@@ -33,8 +33,17 @@ public abstract class TorqueBaseCommand<T> : AsyncCommand<T> where T : CommandSe
         catch (ApiException e)
         {
             ConsoleManager.WriteError("Error: unable to execute a command. Details:");
-            ConsoleManager.WriteError($"Error message: {e.Message}");
+            if(!e.Message.StartsWith("Operation failed")) // Generic error when our swagger metadata doesn't specify the problem. 
+                ConsoleManager.WriteError($"Error message: {e.Message}");
             ConsoleManager.WriteError($"Status code: {e.StatusCode}");
+
+            if (e is ApiException<ErrorResponse> apiError)
+            {
+                ConsoleManager.WriteError($"Result:");
+                foreach (var resultError in apiError.Result.Errors) 
+                    ConsoleManager.WriteError($"  {resultError.Message}");
+            }
+            
             ConsoleManager.WriteError($"Base Url: {Client.BaseUrl}");
             ConsoleManager.WriteError($"Space: {User.Space}");
             
