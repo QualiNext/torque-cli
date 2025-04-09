@@ -14,8 +14,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
-
+          dotnet-version: 9.0.x
       - name: Publish
         run: |
           dotnet publish ./Quali.Torque.Cli --self-contained -r osx-x64  -c release -o ./osx-x64 -p:PublishSingleFile=true
